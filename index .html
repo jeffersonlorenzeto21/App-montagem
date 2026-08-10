@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sherman OS — Montagem &amp; Assistência</title>
+
+<!-- Firebase (banco de dados compartilhado, funciona dentro e fora do Claude) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/12.16.0/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/12.16.0/firebase-database-compat.min.js"></script>
+
+<!-- Instalação como app no iPhone (Adicionar à Tela de Início) -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LIDER">
+<meta name="theme-color" content="#F4F3EF">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" href="data:image/png;base64,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">
+<link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIkxJREVSIC0gR2VzdFx1MDBlM28gZGUgTW9udGFnZW0iLCAic2hvcnRfbmFtZSI6ICJMSURFUiIsICJzdGFydF91cmwiOiAiLiIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLCAiYmFja2dyb3VuZF9jb2xvciI6ICIjRjRGM0VGIiwgInRoZW1lX2NvbG9yIjogIiNGNEYzRUYiLCAiaWNvbnMiOiBbeyJzcmMiOiAiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFNQUFBQURBQ0FJQUFBRGR2dnRRQUFBTzUwbEVRVlI0bk8zY2Y0d1VaWjdIOFhxZXJxN3E2dC9kUTNBUVpzQVpIQWRtMUF4UkZCTnpLbmhSSkN1d2hOMllOYmsxdzYrL1ZuSXNPVys5eEwzczRjWGQvZTlRTU43bVFKSUQ1VVJaL3ppU1V4WTJlMUVSeEFtTHgyWUdEZ1VtT0xNelBmMnJ1bjQ5ei8xUnp0d0lNODFNZjJ1WVlmMjg0aDhHbXVxcTZuZlhyNmVxV2JFd3FBRFVpay8zRE1DdERRRUJDUUlDRWdRRUpBZ0lTQkFRa0NBZ0lFRkFRSUtBZ0FRQkFRa0NBaElFQkNRSUNFZ1FFSkFnSUNCQlFFQ0NnSUFFQVFFSkFnSVNCQVFrQ0FoSUVCQ1FJQ0FnUVVCQWdvQ0FCQUVCQ1FJQ0VnUUVKQWdJU0JBUWtDQWdJRUZBUUlLQWdBUUJBUWtDQWhJRUJDUUlDRWdRRUpBZ0lDQkJRRUNDZ0lBRUFRRUpBZ0lTQkFRa0NBaElFQkNRSUNBZ1FVQkFnb0NBQkFFQkNRSUNFZ1FFSkFnSVNCQVFrQ0FnSUVGQVFJS0FnQVFCQVFrQ0FoSUVCQ1FJQ0VnUUVKQWdJQ0JCUUVDQ2dJQUVBUUVKQWdJU0JBUWtDQWhJRUJDUUlDQWdRVUJBZ29DQUJBRUJpUnJzNUtTVVFnakdtS0lvbkFkWkozSEtRb2l4SjZzb2lwVCsvN05oaE5tODhUdU9QUnRTTXNZbXRWeWpWOGlZZjZzb3ltU25XWU1nQTVKUzZyb2UxalQvSXltWHkzTDRzNW4yS2NmajhYSExZRXhSbUtJb251dll0dTI0TGlQWHp4aXI5bzVqL1FQUGRTdVZ5Z1JmTHFYVU5FM1RkV1c4OWNDWW9uRFB0VTNUbEZKT1hVYXNXQmdNWkVKQ0NDTWFQZnplZXg5OCtHRWtFZ21IdzgvLzVDZnBkTnAxWGVKM21qSmxmOTNadHYwdk8zZjI5ZldGVlhYMCttYU1oVlhWaUVicnN0bjZPWFBtejUvZnRHQkJ0cTVPU2xrcWxXcGI3MUpLVlZVSEJnWjI3dHhaTnMwUTV6Y3NuVEZXTWMyMnRyYm5ubnZPY1p3YkxwUy9RbzRmTy9ZZjc3d1ROUXh4WFVOaFZVMmwwdzBORFlzWExWcThlSEVrRWlrVUNsUFVVR0JiSUNtbHFvYlBuRG16Zi8vK1pESVppVVEyYmR5WXpXYW5mY3FNTWMvempodzUwdFBUbyt1NmN0M1daV1JmRUkxRzYrdnI3N3Z2dnBVclZ6NjBiQm5udkZRcWhVS2h5YzR3NTd4U3FSeis3Vzl6dVp5cXF0ZS80L1d2eitmenVhR2h6czdPaVV4ZlNxbXFXazlQei83OSs5UHB0T2Q1MTgra0VFSUlFWS9IMjl2YU9qZHNXTEY4ZWFsVUNtcnYvSzJaRDNScVV0ZjFkRHFkU3FXU3lXU2dzMHVkY2p3ZVQ2VlNxVlRLTUF6UDg4UW9qREZOMDZMUktPZTh0N2Yzd0lFRG5aMmRHelp1UEh2MmJES1puTlNoekFqR1dDS1JTQ2FUcVZRcUVvbmNjSWZMR0ZNbXQxQlMwelIvaGFSU0tVVlJSaStVdjROTHA5T2hVT2pUVHovZHVHblR6cDA3bzlHb2tMVXNTM1hCSDBSN3cyYlVsUDAxYTFuVzNMbHpseTVkT3JLbkVKNW5WaW9EQXdPWExsMjZldldxYmR2SlpKSnpmdXpZc1ZPblR2M2p6MysrZXMyYXd0QVFuL3gyeVA4Z0xjdHFiR3k4ODg0N3EreWJPR05sMDd6M25uc21lOXp0cnczWGRWZXNXSkhOWnYxOXVwVFNxbFF1WGJwMDluKys4Rnd2bVVxNXJ2dktMMzg1Yjk2ODFhdFg1L1A1R3JhcFZRUWMwRXpHT1RkTjg5NTc3OTJ4NHhWRmNZZTN2bEo0cm1WWitYeiszTGx6LzNua3lQdnZ2MThzRmpPWmpHbWFmN3R0bXhvT3IzcnFxZHJXTytkOGFHaG94ZkxsUDkzKzk3WlZiVy9vNzJkdDI2NWg0eXFFMkxwMWEydHIrOGhDU2VHV3krVXpaLzc0OGorL2ZPYk1tWGc4cnV2NmE3dDJQZkxJSTdxbWVlT2Z1OVhndTNVZGlERm0yN2JuVm5LRGcva2gvNzljcVZRU1FxUlNxWWNmZm5qSGpwZjM3ZHQzZDN0N0xwZnpEOWhmZXVtbDd1N3VpR0hVdkM5ekhFY0l0MXhWcVZTeUxLdm01Y3JuODdaVkdsbW9ZckVvcFh6Z3dRZDN2ZmJhL01aRzB6UmpzVmgzZC9lSkV5Y2kwV2h0Q3pLZTcxWkFpcUl3eGtMZjVoL2h1cTViTEJhSGNvTjN0N2YvNjI5KzA5SFJrYy9ubzlGb1gxL2ZxNisrR2xiRGxIZmtFMERaS2x5L1JJeXh3WUUvMTgrWjk4d3p6MVFxRmM2NTY3cWZkM1V4RnVUK1Mva09CalFlLzJOV1ZUV2Z6NmZUNlgvNnhTOVN5YVJsV1lsRTRyOCsrT0RzMlQ4YXRXNkVwb3VxcXA1cmRTeFpFbzFHL1FQSEs1Y3ZLMHJBaTRDQXJxV3FhaUdmYjEzVXRuYmR1bUt4cUdsYUxwZjc0TU1QMWJBZTFIWFJtNE14Sm9Ud0wzd0lJVGpuWmRQMHlKZmxyb0dBeHNBNWR4MXIxY3FWOFhqY2RkMXdPSHppeEFtcllrNzFzTUJVa01PWEtxU1VJL3ZyQU4xNmErUW00SnpibHRXOGNHRnpjN05wbXJxdTkvVDBEQXo4T2F5cU5XeUVSbCtBcUNMd3padVVrb2RDVjcvKzJqUk56cm1VTXB2Sk1CNEs5bzIrUTZmeGsrSUprVWdrbXB1YXVycTZETVBJNS9POXZiMnpaOCsySnpEVU1KcVVVdGUwVUNpY1NxV3FYa3hpRmJOTUgvWVplVk8vMmxCSVAvYTczMW1XNVEvTXRTNWFSSi80TlJEUTJLU1VDbU1ORFEzK2xyOXNtdjM5L2FIUTVMNitVa3JETUQ3KzVKTmYvL29WMjZxTUZ3ZGp6SFhkSC96d2g0ME5EYlZkQ3JwbWFwenpVQ2lrNmJILy9zT3h0dzhlakNjU2xtWE5talhyb1dYTHFzeEdiUkJRRlR5YnpmbzNXamkyWFN3V2xVbWVBd3NoSXBISTUxMWRuNXc0VWVWalk0eFpsdlZYano2NnNMblpzaXo2MkxObFdYMzkvVWVQSG4zampUY3N5eklNbzdlM2Q5dTJiWGZjMFpUUEQrRks5TTBUTVF4RlVmd2pVTnUyYTVpQ1A2U3ZhVnFWMS9pblM1eXgybzVPUXFIUTl1M2JkVjBYUWpCRmtZcmlPTTdBd01EQXdFQThIaGRDOVBiMnJsKy9mc3ZtemFWU01mQ0RhQVJVemVoTlFRMmZyajlBY2R2czJiZlBuVnRsQ00rL1doMkx4V3Erem5UbHlwWFJzOGM1RDNHZXlXUnMyMjVxYW5yMlJ6OWF2WG8xNDF3RWZRNnZJS0RxL09FRi8zZ29YSFVyTWliL1BvMW5uMzMyaFJkZUxPUUhxKzg3cEpUK0plTWE1dE54SEU4SU5qd2RJWVNtYWRGUVNBaGhHTWF5aHg2S0dFWWhudytIdzRHZjZ5R2dLbVF1bC9QM1g1cXF4bU94R2kvalNqbDhZalFsMXlHRkVKczNiMjZZTjgrMmJjYTU2N3A5ZlgwZmZmVFJaNTk5Rm8vRlRwOCt2VzdkdXIxNzk5N1YwdUtmendmNzdnaG9ISXdwaXJ4OCtiSi9nS0pISXRsc1ZuamVWTnlUUlNTbFhMVnFWV3RydXlJZGhYRi94MnRWeW0rKytlWXJ2L3BWS3BVYUhCejhoeGRmM0x0MzcxUmNDTVdGeExGeHhzeHkrZnlGQzZxcWVxNGJqOGZuM0g3N1JPNDNuUmFGUXNHMlNybGNMaitVOHdma0hjZnAzTEJsUTJmbjRPQmdKcE01Y2ZMa20vdjJ4ZUxKd08vVFFrQmo4Ty9oLy9MTEw3dTd1eU9SU01XeUdoc2JaOVhWQlhXaEwzRCtoWi9SRkVVcEZYT2JOMjFxVzd5NFVDZ2s0dkY5Ky9aZHVmeVZyZ2M4b29lQXh1QjVYbGlMSEQxNmRHQmdRTk0wMjdhWGRIUVkwWGpnWDkrcDQ1OEFKcEtwdi9ueGoyM2Jqa1FpWDMzMTFUdUhEdWtSM0E4MHhmeXJmMTlmN2YzMy9mc053M0JkTnhxTlB2YllZOEtib2Z1djhYRE95NlhpWHovKytLTFcxbEtwRkkxR0R4MDYxTi8vZGJEbllnam8vMGtwL2JGM1RkTjI3Tmh4OGVMRmFEUmFLQlNXUGZqZ2tpVkx5dVh5clRVYTc0K1FwTktaTld2V21LWVpqVWE3ZTNxT0hEbGlSR3UvNEhTOUtWd2ovdjNlVmNhZi9iK2R1aGtZMDNoajQxTEtjRGljU21jcWxjcFB0MjkvNy9EaFZDcGwyN2F1NjF1MmJPR1RIQVViVFFoUmZUMU0zYXJnbkZzVmM5VlRUelUwTkZRcUZTMGNQbmp3WUtsWTlCODJDc1JVbmNZenhqS1pURFNXVWhUeDdTdTYzM3FWb29oeXFYRFRidFR5S3dtcGtYUTZwREErUEE5TVVZUmpXMWV2WGoxKy9QaWVQWHZPL2VsUDZYUmFDSkhMNVY3ODJjK1dQdkJBZnFqR0lTUi9QRlZWdFV3MnF5alZSdU1WUlpybFFyQUhLUDRvMiszekdsZXVYTGw3OSs1WmRYVmRYVjNIang5NzRzbVZoWUFHeFlJUDZKdlJSOGQ1L2ZYWEU0bUVOLzYxRXlGRUxCWmJ1M2F0LzZ6V1ZCOWgrRTlMWGJ4NDhjRCtmWlhLTjRQU1FnaC9wUDM4K2ZQbnpwM3I3ZTJOUkNMWmJOYS95MzNyMXEwYk4yNHM1QXUxcld2L2NPcmt5Wk83ZHUyc2ZqK2EvenpyMnJWckEzbVdkelRHbUdOWHZyOTI3VnR2disyNHJwVHl3RnR2clZqeGVGQzc0NEFER3JtWHdIWGRYYnQzVi9rKytaSFYxOWMvK2VTVHNWanNoaHZ3a1Z2VGExdTUvZ1Zsd3pDKytPS0x2M3ZoaFpHSmpEeVc2aC82cEZJcDB6VDcrL3VibXBxMlB2LzgwMDgvWFN3V2EvczAvYmVJeFdLZm5qeDUvUGUvOTIvcEd1K1ZudWNaaHJGOCtmSzZ1anJYZFNjNC9aRWI4cXU4ekgrWTZhNjdXaDk3OU5GMzMzMDNuVTUvL1BISHAwNmR2SC9wMGxJeGdMSFZnQU55SEtkc21ycXVlNTRYaVVTcXZOSVB5RENNQ1FiaE9JNXBtcXFxK2cvc1RYYkdMTXVxVkNyK1AvUWZjRmFHZjVwREtvcndQTWR4L0JPdXRyYTJKNTU0WXMzcTFiTnZ1NjJRejllMml2MkJyVXFsNHJxdXdsZzhIcTh5ejM1QUVjT1kxSHU1cm11YXBuK1ZvZm9LWVl3SktYNndmdjNodzRkTjB4d2FHdnEzUFh2dXUvLytTU3pQK0lJTVNBZ3hhOWFzMXBhV3hBU2VDR2FLNHJodVhWMWRsYS9tTlZOdWFXbUp4MkpoVFZNbmVXc3BZMnpCZ2dWcUtLUnAyalgvTEJ3T0c0YVJ5V1RtMU5jM05UZTN0N2ZmdVhCaExKNm9tR1hLY1krcXFzM056WVZDUVEyRmJ2empDb3JpQ2FIcitzU1hTd2lSVHFkYldsb1NpWVRqT05VdkQzTE96WEs1bzZQajZlOTk3L1RubnpjMU5WMjVmUGwvTDF4b0NPVCt0YUIrbmVPYnlVMStiaWE0eWtaUHViWTdLOGI3Yzg2NUdncUZ3cHFpTU0rMUs1V0s1M25FQjdXcXZHTVZrMTJ1MFR2aWlieVljKzd2ci8wSHZRTTVEQW80b0Z1UnYvYjlUZVpOK0VXbWFlU2YzeWpENVFWeThqdERSK1A5bXg5R2Y0ZXZXZGpKZnIxdnVLNUdmcHBNQnZFVEZqVi9OR011bDVSS0lEK2ROcWt0MWdUTjBJQTBUZU9jU3pucFVQN3krQ3RCQ09FNHpuVFB5eGhtWEVCU3lsQkk3ZW82UFRBd3FLb0JQOGg5aTNKZEw1dk50TFhkNDNrejduYUFHUmVRb2lpY2g4NmZQMy94NGdWTnU4V2VKcDRLakRIYnR1YlB2K1B1dXpzOGIwS1hpRzZtbVhnUXpSZ2JIQnkwTEl2em1mVnRteTVDU0YzWE01bk1EUHc2emNTQUZFVlJWWFdtYmF1bmwzK253SFRQeFJobTRpNU1VWlNaZWNBNHZXYm1OMnFHQmpRelZ4WmM3eS8yb2huY0hBZ0lTQkFRa0NBZ0lFRkFRSUtBZ0FRQkFRa0NBaElFQkNRSUNFZ1FFSkFnSUNCQlFFQ0NnSUFFQVFFSkFnSVNCQVFrQ0FoSUVCQ1FJQ0FnUVVCQWdvQ0FCQUVCQ1FJQ0VnUUVKQWdJU0JBUWtDQWdJRUZBUUlLQWdBUUJBUWtDQWhJRUJDUUlDRWdRRUpBZ0lDQkJRRUNDZ0lBRUFRRUpBZ0lTQkFRa0NBaElFQkNRSUNBZ1FVQkFnb0NBQkFFQkNRSUNFZ1FFSkFnSVNCQVFrQ0FnSUVGQVFJS0FnQVFCQVFrQ0FoSUVCQ1FJQ0VnUUVKQWdJQ0JCUUVDQ2dJQUVBUUVKQWdJU0JBUWtDQWhJRUJDUUlDQWdRVUJBZ29DQUJBRUJDUUlDRWdRRUpBZ0lTQkFRa1B3ZjJpeUJWdldSTVc0QUFBQUFTVVZPUks1Q1lJST0iLCAic2l6ZXMiOiAiMTkyeDE5MiIsICJ0eXBlIjogImltYWdlL3BuZyJ9LCB7InNyYyI6ICJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQWdBQUFBSUFDQUlBQUFCN0drT3RBQUFWUEVsRVFWUjRuTzNkZVhTVjVaM0FjWEt6QUFHc2tNUXFtMmhjQ2xoUkJqaWlBbXJyZ2xXS0ZXWFIxcXJUbm5GRXhhV2JaMGJVV2tSUTUxUmF0ZHFXNG9DS2lnS2Q2VlRSb1hXWkhrblAxTWlBWmF1VTlpaUxBWnNRS2xubkQ4L01tYkhtRFJUeTNwdjcrM3orOHB6bklmZVhlRSsrdWR2ekZ1eXUyOVVGZ0hneTJSNEFnT3dRQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlTQUlDZ0JBQWdLQUVBQ0VvQUFJSVNBSUNnQkFBZ0tBRUFDRW9BQUlJU0FJQ2dCQUFnS0FFQUNFb0FBSUlxeXZZQUI5OUxMNzMwM05LbGJhM2VQbk5tZVhsNWl1TjB1RTd4L1NZUG1TeVR5WlQ4ajY0bEphV2xwZVhsNVgzS3lzckx5c3JMeS92MTYxZFNVbkpRaDgyK0EvbHhIVVJmL2VwWFQvejBwN04xNndmK1EvandudE8xcEtSSGp4N2w1ZVZsNWVVREJneW9QUHJvc3JLeWd6UmpwNWVIQWRpNmRXdFZWVlZicXg5ODhFR2F3NlNnVTN5L3lVTWVpRXdtMDc5Ly84ckt5c3JLeWlHREI1OTg4c21scGFVZGNVTnA2cmdmMTM2NVpOS2tMTjU2eC8wUSt2VHA4emZEaDQ4WU9YTGN1SEc5RHoyMEkyNmlzOGpEQUJCS1MwdkxsaTFidG16WnNuTGx5aTVkdWhRV0ZnNGRNbVRrcUZIanhvNDkvdmpqc3owZHVXam56cDByWG54eHhZc3Z6cDA3ZC9UbzBWTW1UeDR4WWtTMmg4b09BU0N2TkRjM3Y3bDY5WnVyVi8vb1J6K3FyS3o4M1Bubm4zdnV1Ym53SkJnNXFLbXA2WlZYWG5ubGxWZUduWGppalRmZU9Ianc0R3hQbERZdkFwTzNObTNhOU1DOGVaK2ZPSEhXckZudnZ2dHV0c2NoZDFXLytlWlZWMTg5NzN2ZmEyNXV6dllzcVJJQThseFRVOU95NWNzblhYTEozWGZmdlhQbnpteVBRNDVxYVdsWnVIRGhEVE5tMU5YVlpYdVc5QWdBSVRRMU5TMWR0bXpLMUtuUFAvOTh0bWNoZDFWVlZWMTMvZlY3OXV6SjlpQXBFUUFDK2RPZi9uVGJ6SmxmKy9yWFEvMlZ4MzU1NjYyM3Z2Nk5iN1MwdEdSN2tEUUlBT0c4L1BMTGYvdVZyN3p6emp2WkhvUWNWVlZWdGVDeHg3STlSUnE4QzRqc2Uycng0djc5K3lmdmFXaG8yTHQzYjBORHc1NDllN2J2MkxGaisvYnRPM1pzM0xCaC9ZWU5mL3pqSC9mMzc3WE5temRmZGZYVjk5OTMzNUFoUXc1ZzhPeTQ2NjY3RHF1b1NPR0dqanJxcUJSdTVhK3pML2VaeHNiR3VycTYydHJhbXBxYS8xcXpwcnE2dXJxNitzOS8vdk8rZlAxSEgzMzBNMmVkTlhEZ3dJTXhiTzRTQUxLdnNMQ3dzTEF3ZVUvMzd0MjdkKy8rNFg4UEdqVG8veTd0MmJPbnFxcnFQMzcxcTlkZWUyM0hqaDM3ZUtPN2R1MjZZY2FNUng5OWROQ1JSKzcveU5rMCtGT2ZhdmQzWDk3YmwvdE1ZV0ZodDI3ZEtpb3FLaXNyUjQwYTFhVkxsL3I2K3VlZWUrN0p4WXZidlo4ME56ZC83L3ZmbjNQUFBRZHQ0cHprS1NBNnZkTFMwbkhqeG4zcm05OWN2bXpadmZmZWU5cHBweFVVRk96TFA2eXRyYjNoaGh0cWFtbzZla0p5Ukk4ZVBTNi8vUEpubm41Ni9Ibm50YnY1bDcvODVlYk5tenQrcUd3U0FQSkhKcE1aYy9ycDk5OTMzNElGQzBhTkhMa3YvMlRyMXEyM2ZPMXIwZDc5SFZ5M2J0MXV2LzMyRzJmTWFIZm5raVZMT242Y2JCSUE4dER4eHgwM2I5NjgyYk5uSDNMSUllMXVYcnQyN1kvbnowOWhLbkxLbENsVEpsMThjZktlRlN0VzVQZmJnUVNBdkhYbUdXY3NXcmh3MklrbnRydHovdno1NjlhdFMyRWtjc3FNR1RPT09lYVloQTI3M24vL3JiZmVTbTJlOUFrQStleXd3dzZiTjIvZXFhZWVtcnl0dWJuNU83Tm10YmEycGpNVk9hSzR1UGpLSzY5TTNwTUx4N0oySEFFZ3ozWHQyblh1bkRudE5tRGR1blcvK01VdlVwbUlISExXbVdmMjc5Y3ZZY052Zi92YjFJWkpud0NRLzRxS2l1NzY5cmVQYk8vdG5vODgrbWgrUCtITFg4cGtNbVBIamszWXNIN0RodFNHU1o4QUVFS1BIajNtM0hOUFNYRnh3cDdmL2U1M0hnUUVOR3pZc0lUVmJkdTI1ZkdmQlFKQUZJTUdEZnJTRlZjazcxbTZiRms2dzVBN2tnUFExTlMwYTlldTFJWkptUUFReUJWWFhORXY4UW5mcXFxcWJkdTJwVFlQdWFCMzc5NUZSVWxuSWdnQTVJT1M0dUl2ZmZHTENSdGFXbHIrOVdjL1MyMGVja1N2bmowVFZ2ZnUzWnZhSkNrVEFHSTUvM09mUzc1QzVJZlhGaWFVUXo3eGlZVFZ2UTBOcVUyU01nRWdscExpNHM5UG1KQ3dZY09HRFhuOGtKK1BsZnd5YjJFbWIzOVA1dTAzQm0wNTU1eHpFbFpiVzF2eis3TS8vS1hhMnRxRTFSNDllcVEyU2NvRWdIQUdEUnAwN0xISEpteDRmZFdxMUlZaEZ5UmZJVTRBSUsrTVB1V1VoTlUxYTlha05nbFp0MzM3OXVTbmdQYmxTTUZPU2dDSTZPVGh3eE5XdDJ6WjB0RFltTm93WkZkMWRYWENha1ZGaFVjQWtGZE9HallzMC9ZcmU4M056VysvL1hhYTg1QkZieVFHNE5qRTQwSTdPd0Vnb3RMUzBnRURCaVJzMkxSeFkyckRrRVdOalkzSjUzOGt2MXpVMlFrQVFYM2t3c0lmOFljLy9DR3RRY2ltNTU5Ly9yMzMza3ZZME80NXNwMmFBQkJVY2dCMkpQNVNJRDk4OE1FSEN4NTdMR0ZEZVhuNWlmdHdRYUhPSytrRURNaGpBL3IzVDFpdHllRUFMRisrL0JPSm4xdzljS1dscFJkZGRGR0gza1F1bUQxNzlwWXRXeEkyZk9hc3N4SmVLOG9EQWtCUWZmcjBTVmg5cjZZbXRVbjJWL0lmclFkRlJVVkYzZ2ZnaHovODRiLzkvT2NKRzRxTGk2ZE5tNWJhUEZraEFBU1ZISUNhSEE0QUIyalBuajEzM0hsbnU5ZCttRGh4NHVHSEg1N0tSRmtqQUFTVkhJQTllL2FrTmdtcHFhMnRmZnFaWjU1KzZxbGQ3NytmdkxOUG56NVhYM1ZWS2tObGt3QVFWUGZ1M1JOV0cvTDNBTWo4ME5qWTJPNy9vNmFtcHRyYTJ0cmEycHFkTzFldlhsMWRYYjE2OWVwOU9kczVrOGw4Kzg0N2UvZnVmWkNHelYwQ1FGREZpWmVIYkc1dWJtbHB5ZThYQUR1MUtWT25kdHdYbjM3dHRTTkdqT2k0cjU4N0JJQ2dTa3BLa2pmczNiczMrVkVDK1NlVHlkeHl5eTBYZitFTDJSNGtKUUpBVUlXRmhRVUZCYTJ0clcxdGFHcHFTbk1lc3E1Mzc5NjNmdXRiWThlT3pmWWc2UkVBZ21wcGFVbjQ3ZCtsUzVmazY4U1NUektaeklRSkU2WmZlMjJ2WHIyeVBVdXEzTVVKcXQyWEVOdDlqaWhiTHIza2t1UkxHQjY0UEQ3LzhpUDY5T2x6NFFVWFRKdzRzVy9mdnRtZUpRc0VnS0NTQTVESlpBb0xDMU1iWnI5TW5qeTVmK0xIbU5sM0F3Y09QR1gwNkppLy9iczRDNGl3a3Q4TzJMVnIxOVFtSVl2ZWVPT05hNjY1WnM2Y09mdnk5dEQ4SXdBRXRUUHh5dS9kdW5WTGJSS3lic216ejE1My9mWDE5ZlhaSGlSdG5nSWlxSjA3ZHlhc0puOU9tS3c3NmFTVEVpTGQydHBhWDErL2UvZnVtcHFhNU92OS9xL3E2dXJycnJ2dXdRY2ZETlYrQVNDb25ZbW4vWlNYbDZjMkNYK0ZmL3lIZjlqSEYwTGVlZWVkTld2WHJsaXg0dFZYWDIxdWJrN1l1V2J0MnR2dnVPUHVXYk1LQ2dvTzBwaTV6bE5BQlBYdXUrOG1yRllJUUw3bzI3ZnYyWi85N0p4Nzd2bnA4dVhqeDQ5UDNyeHk1Y3JISDM4OG5jRnlnUUFRMU9iTm14Tld5d1FnNzVTVmxkMCtjK1kvM1g5LzhwdGNIM3I0NFkxaExnZ3FBQVQxZG1JQSt2WHJsOVlncE9yVVUwK2Q5OEFEQ1lkOE5EWTIzbm5ublMwdExXbE9sUzBDUUVRTmpZMWJmdi83aEEzSEhITk1hc09Rc3FGRGg4NmNPVE5odzdyMTY1Y3NXWkxhUEZra0FFUzBkczJhaHNiR3RsWXptVXpsMFVlbk9ROHBPL09NTXlaTm1wU3c0UWVQUFBKK2U5Y015QU1DUUVULytadmZKS3oyN2RzMzFIc0JZN3B1K3ZRampqaWlyZFc2dXJvRkN4YWtPVTlXQ0FBUlZhMWFsYkE2ZVBEZzFDWWhXN3AxNjNielRUY2xiSGhteVpMdDI3ZW5OazlXQ0FEaHZQZmVlMjlVVnlkc0dEVnlaR3JEa0VWanhvd1pQbng0VzZzTkRRM3pmL0tURk1mSkFnRWduSmRlZWluNVBSNmpSbzFLYlJpeWEvcjA2UW1yLy9MVG45WWtmbUN3c3hNQXdsbTJmSG5DNnNDQkF3OC8vUERVaGlHN2hnNFpNdnFVVTlwYWJXaHNmT0xKSjlPY0oyVUNRQ3l2dmZiYXBrMmJFamFNR1RNbXRXSElCVi8rOHBjVFZwOTk5dG5kdTNlbk5VdmFCSUJZMm4xcng0VVhYSkRPSk9TSWswNDY2WVFUVG1ocnRiNitmdW5TcFNtT2t5b0JJSkNmUC85ODladHZKbXdZT25Ub1VVY2RsZG84NUlqTEw3c3NZZlhKeFl2ejlRTFJBa0FVZFhWMTMvM3VkNVAzVEpnd0laMWh5Q25qeG8xTE9QeGp4NDRkTDd6d1FwcnpwRVlBQ0tHMXRmV09PKzVJdmdaQVJVWEYrZTJkRmtsZXltUXlreWRQVHRpd0tFK1BDQlVBUW5qa2tVZGVlZlhWNUQxWFhYbGx6bDRJbm80MjRjSUxlL1hxMWRicXhvMGJYMy85OVRUblNZY0FrUDhXTEZqdzQvbnprL2NjY2NRUm52K0pySHYzN2hkTm5KaXdZZUdpUlduTmtoNEJJSisxdExROE1HL2Vndzg5MU83T20yKyt1YWpJQmZKQ3UvVFNTeFB1QTZ0V3JkcXdZVU9hODZSQUFNaGJXN2R1L2J0cnJsbTBEMys0WFhEQkJXTk9QejJGa2NobEZSVVZaNTk5ZHNLR2Zia3ZkUzRDUUI3YXUzZnZnc2NlbTNiWlpkV0paLzU4NkpPZi9PU05NMlowL0ZCMEFwZE5tNWF3dXVMRkYvUHNlRGdCSUsvVTF0WSs4Y1FUa3k2NTVNRUhINnl2cjI5M2YybHA2YjF6NS9iczJUT0YyY2g5eHg1NzdJZ1JJOXBhYldwcWVuTHg0alRuNldpZTlDUWYxTlhWclZxMTZ1V1hYLzczbFNzYkdocjI4VjhWRlJYZE0zdjJjY2NkMTZHejBibGNObTNhcjMvOTY3WldseTVkZXZWVlZ5VmZWYmdURVFBNm41YVdscDA3ZDI3YnRtM2pwazNyMTY5ZnQyN2QyclZybTV1YjkrdUxGQlVWM1Q1enBvTS8rWWpSbzBjUEdqUm9jeHVYalA3d1pJakxFajg1M0ltRUM4Q1VxVk1MT3Y1V3hvOGZmK3V0dDNiODdlU0oyMjY3cld2WHJzbDdHcHVhR3ZidTNkdlFVRjlmWDFOVGM0RFg3TzdWcTlmc3UrOU9lTENmeTlLNUQzL280Ui84WU9pUUlXbmRXazRvS0NpWU5tM2FyRm16MnRydzVPTEZVNlpNS1N3c1RIT3FEaEl1QUkxdFh3bjJJR3Jhejc5R2cxdXpkbTJhTjllL2YvOTc1ODd0dkdmK3BITWYvbERyZ1lXMmt4cC8zbmtQUGZUUXJsMjdQbloxKy9idEw2eFlNZjY4ODFLZXFpTjRFWmhBTXBuTTVFc3ZYYlJ3WWVmOTdVOEtTa3BLSmwxOGNjS0d4L1BsWkFnQklJckt5c3FISDNyb3BwdHVjc0YzMm5YeHBFa0o1NEtzWDc5K1ZWVlZtdk4wRUFFZy8xVldWczc2em5jV0xWdzRiTml3Yk05QzU5RDcwRVBQUC8vOGhBMExGeTVNYlppT0UrNDFBT0lvS2lvYVBYcjBoQXN2SERObVRFRkJhcStia2llbVRaMjZiTm15MXRiV2oxMTkvZlhYTjIzYVZGbFptZkpVQjVjQWtHK0tpNHRQT09HRU04ODQ0NXh6eisxOTZLSFpIb2ZPNnNnamp6enR0Tk5lYmZzUTJZV0xGczI4N2JZMFJ6cm9CSUI4MEt0WHI2T1BQdnFFb1VOSGpCdzUvT1NUUGN2UFFYSFp0R2tKQVhqaGhSZisvcHByS2lvcTBoenA0QklBY2wxQlFVRnhjWEhYcmwxTFNrcUtpNHQ3OXV4WlZsWldWbFpXWGxaV1hsNCtZT0RBWXlvckR6dnNzR3lQU1I0YVBuejQ4Y2NmdjI3ZHVvOWRiV3BxV3Z6VVU5T3Z2VGJscVE2aWd0MTFILzllVndEeW0zY0JBUVFsQUFCQkNRQkFVQUlBRUpRQUFBUWxBQUJCQ1FCQVVBSUFFSlFBQUFRbEFBQkJDUUJBVUE2RHl6bVBQLzdQMlI0Qk9zUzBhVi9NOWdqOFB4NEJBQVFsQUFCQkNRQkFVQUlBRUpRTHdnQUU1UkVBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkFDQUJDVUFBQUVKUUFBUVFrQVFGQUNBQkNVQUFBRUpRQUFRUWtBUUZBQ0FCQ1VBQUFFSlFBQVFRa0FRRkQvRGYzbGllVEtIbWJpQUFBQUFFbEZUa1N1UW1DQyIsICJzaXplcyI6ICI1MTJ4NTEyIiwgInR5cGUiOiAiaW1hZ2UvcG5nIn1dfQ==">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  --bg:#F4F3EF;
+  --panel:#FFFFFF;
+  --panel-2:#F7F6F3;
+  --panel-3:#ECEAE5;
+  --border:#DEDCD5;
+  --text:#2B2B27;
+  --text-dim:#6E6E67;
+  --text-faint:#9A9992;
+  --orange:#3F3F3A;
+  --orange-soft:#EAE9E5;
+  --blue:#5B7C8A;
+  --green:#4C8C4A;
+  --green-soft:#E4F0E3;
+  --amber:#A9791E;
+  --amber-soft:#FBF0DC;
+  --red:#B23A31;
+  --red-soft:#FBE7E5;
+  --mono:'JetBrains Mono', monospace;
+  --display:'Oswald', sans-serif;
+  --body:'Inter', sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  font-size:14px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--orange);color:#FFFFFF;}
+
+/* ---------- layout ---------- */
+.app{display:flex;min-height:100vh;}
+.sidebar{
+  width:230px;
+  flex-shrink:0;
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  padding:20px 14px;
+  position:sticky;
+  top:0;
+  height:100vh;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:4px 8px 20px 8px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:16px;
+}
+.lider-logo{
+  background:#F4F2ED;
+  border-radius:8px;
+  padding:16px 12px 14px 12px;
+  text-align:center;
+  margin-bottom:16px;
+}
+.lider-logo .wordmark{
+  font-family:var(--display);
+  font-weight:300;
+  font-size:22px;
+  letter-spacing:9px;
+  color:#4B4B45;
+  text-indent:9px;
+  line-height:1;
+}
+.lider-logo .tagline{
+  display:block;
+  margin-top:6px;
+  font-family:var(--body);
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#9A9A92;
+}
+.brand-mark{
+  width:34px;height:34px;
+  background:var(--orange);
+  border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);
+  font-weight:700;
+  color:#FFFFFF;
+  font-size:16px;
+  letter-spacing:-0.5px;
+  flex-shrink:0;
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.15;}
+.brand-text b{font-family:var(--display);font-size:15px;letter-spacing:0.5px;font-weight:600;}
+.brand-text span{font-size:10.5px;color:var(--text-faint);letter-spacing:0.6px;text-transform:uppercase;}
+
+.nav-group{margin-bottom:18px;}
+.nav-label{
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  color:var(--text-faint);
+  padding:0 10px 8px 10px;
+  font-weight:600;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;
+  border-radius:6px;
+  color:var(--text-dim);
+  cursor:pointer;
+  font-size:13.5px;
+  font-weight:500;
+  margin-bottom:2px;
+  border:1px solid transparent;
+  transition:background .12s ease;
+}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:.85;}
+.nav-item:hover{background:var(--panel-2);color:var(--text);}
+.nav-item.active{background:var(--orange-soft);color:var(--orange);border-color:#D3D1CA;}
+.nav-item.active svg{opacity:1;}
+.nav-count{
+  margin-left:auto;
+  font-family:var(--mono);
+  font-size:10.5px;
+  color:var(--text-faint);
+  background:var(--panel-3);
+  padding:1px 6px;
+  border-radius:10px;
+}
+.sidebar-foot{
+  margin-top:auto;
+  padding:10px 8px;
+  border-top:1px solid var(--border);
+  font-size:10.5px;
+  color:var(--text-faint);
+  line-height:1.5;
+}
+
+.main{flex:1;min-width:0;padding:28px 34px 60px 34px;max-width:1180px;}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px;gap:16px;flex-wrap:wrap;}
+.topbar h1{
+  font-family:var(--display);
+  font-size:26px;
+  font-weight:600;
+  letter-spacing:0.3px;
+  margin:0 0 4px 0;
+}
+.topbar p{margin:0;color:var(--text-dim);font-size:13px;max-width:520px;}
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--orange);
+  color:#FFFFFF;
+  border:none;
+  padding:10px 16px;
+  border-radius:6px;
+  font-family:var(--body);
+  font-weight:600;
+  font-size:13px;
+  cursor:pointer;
+  transition:filter .12s ease;
+}
+.btn:hover{filter:brightness(1.08);}
+.btn:active{filter:brightness(0.95);}
+.btn.secondary{background:var(--panel-3);color:var(--text);border:1px solid var(--border);}
+.btn.ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border);}
+.btn.small{padding:6px 11px;font-size:12px;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ---------- stat cards ---------- */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px;}
+.stat-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:16px 16px 14px 16px;
+  position:relative;
+  overflow:hidden;
+}
+.stat-card .stat-num{font-family:var(--display);font-size:28px;font-weight:600;}
+.stat-card .stat-label{font-size:11.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.6px;margin-top:2px;}
+.stat-card.accent-orange .stat-num{color:var(--orange);}
+.stat-card.accent-amber .stat-num{color:var(--amber);}
+.stat-card.accent-red .stat-num{color:var(--red);}
+.stat-card.accent-green .stat-num{color:var(--green);}
+.stat-card.accent-blue .stat-num{color:var(--blue);}
+
+.welcome-banner{
+  background:var(--orange-soft);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:12px 16px;
+  margin-bottom:18px;
+  font-size:14px;
+  color:var(--text-dim);
+}
+.welcome-banner b{color:var(--text);font-weight:600;}
+.section-title{
+  font-family:var(--display);
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:0.6px;
+  text-transform:uppercase;
+  color:var(--text-dim);
+  margin:0 0 12px 0;
+  display:flex;align-items:center;gap:8px;
+}
+.section-title::after{content:"";flex:1;height:1px;background:var(--border);}
+
+/* ---------- ticket/table cards ---------- */
+.card-list{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;}
+.ticket{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-left:3px solid var(--panel-3);
+  border-radius:6px;
+  padding:13px 16px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  cursor:pointer;
+  transition:border-color .12s ease, background .12s ease;
+}
+.ticket:hover{background:var(--panel-2);border-color:#4a5157;}
+.ticket .tnum{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--text-faint);
+  min-width:118px;
+  flex-shrink:0;
+}
+.ticket .tmain{flex:1;min-width:0;}
+.ticket .tmain b{font-size:13.5px;font-weight:600;display:block;}
+.ticket .tmain small{color:var(--text-dim);font-size:12px;}
+.ticket .tdate{font-family:var(--mono);font-size:11.5px;color:var(--text-faint);flex-shrink:0;min-width:80px;text-align:right;}
+
+.badge{
+  font-family:var(--body);
+  font-size:10.5px;
+  font-weight:600;
+  padding:4px 9px;
+  border-radius:20px;
+  text-transform:uppercase;
+  letter-spacing:0.4px;
+  flex-shrink:0;
+  white-space:nowrap;
+}
+.badge.green{background:var(--green-soft);color:var(--green);}
+.badge.amber{background:var(--amber-soft);color:var(--amber);}
+.badge.red{background:var(--red-soft);color:var(--red);}
+.badge.blue{background:#1a2831;color:var(--blue);}
+.badge.gray{background:var(--panel-3);color:var(--text-dim);}
+
+.empty{
+  border:1px dashed var(--border);
+  border-radius:8px;
+  padding:34px 20px;
+  text-align:center;
+  color:var(--text-faint);
+  font-size:13px;
+}
+.empty b{display:block;color:var(--text-dim);font-size:14px;margin-bottom:4px;font-family:var(--display);font-weight:500;}
+
+/* ---------- filters ---------- */
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.filters input[type=text]{
+  background:var(--panel);border:1px solid var(--border);color:var(--text);
+  padding:9px 12px;border-radius:6px;font-size:13px;font-family:var(--body);min-width:220px;flex:1;
+}
+.filters select{
+  background:var(--panel);border:1px solid var(--border);color:var(--text);
+  padding:9px 10px;border-radius:6px;font-size:12.5px;font-family:var(--body);
+}
+.filters input:focus,.filters select:focus{outline:2px solid var(--orange);outline-offset:-1px;}
+
+/* ---------- forms ---------- */
+.form-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:26px 26px 22px 26px;max-width:760px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.field{margin-bottom:16px;display:flex;flex-direction:column;gap:6px;}
+.field.full{grid-column:1/-1;}
+.field label{font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.4px;}
+.field .hint{font-size:11px;color:var(--text-faint);font-weight:400;text-transform:none;letter-spacing:0;}
+input[type=text],input[type=date],input[type=tel],textarea,select.form-select{
+  background:var(--panel-2);
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:6px;
+  font-family:var(--body);
+  font-size:13.5px;
+  width:100%;
+}
+textarea{resize:vertical;min-height:70px;font-family:var(--body);}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--orange);outline-offset:-1px;border-color:var(--orange);}
+fieldset{border:1px solid var(--border);border-radius:8px;padding:14px 16px 6px 16px;margin:0 0 16px 0;}
+legend{font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);padding:0 6px;}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;}
+.check-row{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:13px;}
+.check-row input{width:16px;height:16px;accent-color:var(--orange);flex-shrink:0;}
+.form-actions{display:flex;gap:10px;margin-top:6px;padding-top:16px;border-top:1px solid var(--border);}
+.req::after{content:" *";color:var(--orange);}
+
+/* ---------- detail / stamp ---------- */
+.detail-wrap{max-width:760px;}
+.detail-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  background:var(--panel);border:1px solid var(--border);border-radius:10px 10px 0 0;
+  padding:20px 24px;position:relative;overflow:hidden;
+}
+.detail-head .num{font-family:var(--mono);font-size:12px;color:var(--text-faint);letter-spacing:0.5px;}
+.detail-head h2{font-family:var(--display);font-size:21px;font-weight:600;margin:4px 0 2px 0;}
+.detail-head .sub{color:var(--text-dim);font-size:13px;}
+.stamp{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  border:2.5px solid currentColor;
+  border-radius:4px;
+  padding:6px 12px;
+  transform:rotate(-6deg);
+  flex-shrink:0;
+  white-space:nowrap;
+}
+.stamp.green{color:var(--green);}
+.stamp.amber{color:var(--amber);}
+.stamp.red{color:var(--red);}
+.stamp.blue{color:var(--blue);}
+.stamp.gray{color:var(--text-faint);}
+
+.detail-body{background:var(--panel);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:22px 24px 24px 24px;}
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px;margin-bottom:18px;}
+.dl div b{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-faint);margin-bottom:3px;font-weight:600;}
+.dl div span{font-size:13.5px;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.chip{background:var(--panel-3);border:1px solid var(--border);padding:3px 10px;border-radius:20px;font-size:11.5px;color:var(--text);}
+.check-list{list-style:none;padding:0;margin:6px 0 0 0;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;}
+.check-list li{font-size:12.5px;display:flex;align-items:center;gap:7px;color:var(--text-dim);}
+.check-list li.ok{color:var(--text);}
+.check-list li .dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0;}
+.check-list li.ok .dot{background:var(--green);}
+.note-box{background:var(--panel-2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;font-size:13px;color:var(--text-dim);white-space:pre-wrap;}
+
+.history{margin-top:18px;border-top:1px solid var(--border);padding-top:16px;}
+.history-item{display:flex;gap:12px;padding:9px 0;border-bottom:1px dashed var(--border);}
+.history-item:last-child{border-bottom:none;}
+.history-item .hdate{font-family:var(--mono);font-size:11px;color:var(--text-faint);min-width:118px;flex-shrink:0;padding-top:1px;}
+.history-item .htxt{font-size:13px;color:var(--text);}
+.status-update{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center;}
+.status-update select{max-width:200px;}
+.status-update input[type=text]{flex:1;min-width:180px;}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(10,12,14,0.7);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;z-index:50;}
+.modal-close{position:sticky;top:0;display:flex;justify-content:flex-end;max-width:760px;margin:0 auto -6px auto;}
+.modal-close button{background:var(--panel-3);border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;}
+
+.toast{
+  position:fixed;bottom:22px;right:22px;
+  background:var(--panel-3);border:1px solid var(--border);border-left:3px solid var(--green);
+  color:var(--text);padding:12px 18px;border-radius:6px;font-size:13px;z-index:100;
+  box-shadow:0 8px 24px rgba(0,0,0,0.35);
+}
+
+.loading-state{padding:60px 0;text-align:center;color:var(--text-faint);font-size:13px;}
+
+@media print{
+  .sidebar,.topbar .btn,.no-print{display:none !important;}
+  body{background:#fff;color:#111;}
+  .main{padding:0;max-width:none;}
+  .detail-head,.detail-body{background:#fff;border-color:#ccc;color:#111;}
+  .note-box{background:#f4f4f4;color:#111;}
+}
+@media (max-width:820px){
+  .sidebar{position:fixed;left:-240px;transition:left .2s ease;z-index:40;}
+  .sidebar.open{left:0;}
+  .form-grid{grid-template-columns:1fr;}
+  .stat-row{grid-template-columns:1fr 1fr;}
+  .dl{grid-template-columns:1fr;}
+  .check-list{grid-template-columns:1fr;}
+  .main{padding:70px 16px 60px 16px;}
+  .mobile-menu-btn{display:flex;}
+}
+.mobile-menu-btn{
+  display:none;
+  position:fixed;
+  top:14px;
+  left:14px;
+  z-index:50;
+  width:42px;height:42px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:8px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.mobile-menu-btn svg{width:20px;height:20px;color:var(--text);}
+.sidebar-overlay{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(20,20,18,0.35);
+  z-index:39;
+}
+.sidebar-overlay.open{display:block;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="lider-logo">
+      <div class="wordmark">LIDER</div>
+      <span class="tagline">Gestão de Montagem</span>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Visão geral</div>
+      <div class="nav-item" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Painel
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Montagens</div>
+      <div class="nav-item" data-view="nova-montagem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+        Registrar montagem
+      </div>
+      <div class="nav-item" data-view="montagens">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4h10M9 10h10M9 16h10M4 4h.01M4 10h.01M4 16h.01"/></svg>
+        Montagens do mês
+        <span class="nav-count" id="count-montagens">0</span>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Assistência técnica</div>
+      <div class="nav-item" data-view="nova-assistencia">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+        Abrir chamado
+      </div>
+      <div class="nav-item" data-view="assistencias">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a4 4 0 0 1-5.66 5.66L4 17v3h3l5-5.04a4 4 0 0 1 5.66-5.66l-3-3z"/></svg>
+        Chamados
+        <span class="nav-count" id="count-assistencias">0</span>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">Dados</div>
+      <div class="nav-item" data-view="backup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        Backup
+      </div>
+    </div>
+
+    <div class="sidebar-foot" id="sidebar-foot">
+      Dados salvos e compartilhados entre todos os usuários desta ferramenta.
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+    <div class="loading-state">Carregando dados…</div>
+  </main>
+
+</div>
+
+<script>
+/* ---------------- state ---------------- */
+let montagens = [];
+let assistencias = [];
+let currentView = 'dashboard';
+let viewHistory = [];
+function irPara(view, id){
+  if(currentView !== view) viewHistory.push({view: currentView, id: window.__viewId});
+  currentView = view;
+  if(id !== undefined) window.__viewId = id;
+  render();
+}
+function voltarPagina(){
+  const anterior = viewHistory.pop();
+  if(anterior){
+    currentView = anterior.view;
+    window.__viewId = anterior.id;
+  }else{
+    currentView = 'dashboard';
+  }
+  render();
+}
+let dataReady = false;
+let currentUser = null; // { name, role: 'montador' | 'gestor' }
+const GESTOR_PIN = '258963'; // altere este código para a senha de acesso do gestor/supervisor
+const WHATSAPP_NUMERO = ''; // opcional: coloque um número fixo (com DDI+DDD, só números, ex: 5511999998888) para sempre enviar ao mesmo contato/grupo. Deixe vazio para escolher o destinatário na hora.
+
+const COMISSAO_PERCENTUAL = 0.012; // 1,2%
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function normalizeName(s){ return (s||'').trim().toLowerCase(); }
+function visibleMontagens(){
+  if(!currentUser) return [];
+  if(currentUser.role === 'gestor') return montagens;
+  return montagens.filter(m => normalizeName(m.montador) === normalizeName(currentUser.name));
+}
+function listaMontadores(){
+  const nomes = new Set();
+  montagens.forEach(m => { if(m.montador) nomes.add(m.montador.trim()); });
+  return Array.from(nomes).sort((a,b)=>a.localeCompare(b));
+}
+function calcComissao(valor){ return (Number(valor) || 0) * COMISSAO_PERCENTUAL; }
+function formatBRL(v){ return (Number(v)||0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+function mesAtualStr(){ const n = new Date(); return n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0'); }
+function mesDaData(iso){ return iso ? iso.slice(0,7) : ''; }
+function statusMontagem(m){ return m.dataTermino ? 'Concluído' : 'Em andamento'; }
+function statusMontagemClass(m){ return m.dataTermino ? 'green' : 'blue'; }
+
+function nextNumero(list, prefix){
+  const year = new Date().getFullYear();
+  const seq = (list.filter(x => x.numero && x.numero.includes(String(year))).length + 1).toString().padStart(4,'0');
+  return prefix + '-' + year + '-' + seq;
+}
+
+function fmtDate(iso){
+  if(!iso) return '—';
+  const [y,m,d] = iso.split('-');
+  if(!y||!m||!d) return iso;
+  return d+'/'+m+'/'+y;
+}
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+
+/* ---------------- storage ---------------- */
+/* =========================================================================
+   FIREBASE — Configuração
+   Substitua os valores abaixo pelos que aparecem no seu Firebase Console em
+   Configurações do projeto → Seus apps → (ícone </>) → SDK do Firebase.
+   ========================================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyBkCBie31e_vbddyJQrYG-Hu33QKIAmvt8",
+  authDomain: "montagem-lider.firebaseapp.com",
+  databaseURL: "https://montagem-lider-default-rtdb.firebaseio.com",
+  projectId: "montagem-lider",
+  storageBucket: "montagem-lider.firebasestorage.app",
+  messagingSenderId: "956067111434",
+  appId: "1:956067111434:web:362b311d87cad61c4835f3"
+};
+let db = null;
+let firebaseOk = false;
+try{
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+  firebaseOk = true;
+}catch(e){
+  console.error('Firebase não configurado ainda:', e);
+}
+
+function comLimiteDeTempo(promessa, ms){
+  return Promise.race([
+    promessa,
+    new Promise((_, reject)=> setTimeout(()=> reject(new Error('Tempo esgotado ao conectar com o banco de dados.')), ms))
+  ]);
+}
+async function loadData(){
+  if(!firebaseOk){
+    toast('Banco de dados ainda não configurado (Firebase). Fale com o gestor.', true);
+    montagens = []; assistencias = []; currentUser = null;
+    dataReady = true; updateCounts(); render();
+    return;
+  }
+  try{
+    const snap = await comLimiteDeTempo(db.ref('montagens').once('value'), 8000);
+    const val = snap.exists() ? snap.val() : {};
+    montagens = Object.values(val);
+  }catch(e){ montagens = []; toast('Não foi possível carregar as montagens: ' + e.message, true); }
+  try{
+    const snap = await comLimiteDeTempo(db.ref('assistencias').once('value'), 8000);
+    const val = snap.exists() ? snap.val() : {};
+    assistencias = Object.values(val);
+  }catch(e){ assistencias = []; toast('Não foi possível carregar as assistências: ' + e.message, true); }
+  try{
+    const saved = localStorage.getItem('sherman_current_user');
+    currentUser = saved ? JSON.parse(saved) : null;
+  }catch(e){ currentUser = null; }
+  dataReady = true;
+  updateCounts();
+  render();
+}
+async function salvarUsuarioLogado(){
+  try{ localStorage.setItem('sherman_current_user', JSON.stringify(currentUser)); }
+  catch(e){ /* login continua funcionando mesmo se não conseguir lembrar da próxima vez */ }
+}
+async function esquecerUsuarioLogado(){
+  try{ localStorage.removeItem('sherman_current_user'); }
+  catch(e){ /* ignora se já não existir */ }
+}
+/* Salva UM registro de montagem (não reescreve a lista toda — evita que dois
+   montadores salvando ao mesmo tempo apaguem o registro um do outro). */
+async function salvarMontagemUnica(m){
+  try{
+    await comLimiteDeTempo(db.ref('montagens/' + m.id).set(m), 8000);
+    return true;
+  }catch(e){ toast('Erro ao salvar: ' + e.message, true); return false; }
+}
+async function excluirMontagemUnica(id){
+  try{ await comLimiteDeTempo(db.ref('montagens/' + id).remove(), 8000); return true; }
+  catch(e){ toast('Erro ao excluir: ' + e.message, true); return false; }
+}
+/* Salva UMA assistência (mesmo princípio acima). */
+async function salvarAssistenciaUnica(a){
+  try{
+    await comLimiteDeTempo(db.ref('assistencias/' + a.id).set(a), 8000);
+    return true;
+  }catch(e){ toast('Erro ao salvar: ' + e.message, true); return false; }
+}
+async function excluirAssistenciaUnica(id){
+  try{ await comLimiteDeTempo(db.ref('assistencias/' + id).remove(), 8000); return true; }
+  catch(e){ toast('Erro ao excluir: ' + e.message, true); return false; }
+}
+/* Usadas pela restauração de backup, que pode trazer vários registros de uma vez. */
+async function saveMontagens(){
+  try{ for(const m of montagens) await db.ref('montagens/' + m.id).set(m); }
+  catch(e){ toast('Erro ao salvar. Tente novamente.', true); }
+}
+async function saveAssistencias(){
+  try{ for(const a of assistencias) await db.ref('assistencias/' + a.id).set(a); }
+  catch(e){ toast('Erro ao salvar. Tente novamente.', true); }
+}
+
+
+function updateCounts(){
+  document.getElementById('count-montagens').textContent = currentUser ? visibleMontagens().length : montagens.length;
+  document.getElementById('count-assistencias').textContent = assistencias.filter(a=>a.status!=='Resolvido' && a.status!=='Cancelado').length;
+  const foot = document.getElementById('sidebar-foot');
+  if(foot){
+    foot.innerHTML = currentUser
+      ? `Conectado como <b style="color:var(--text);">${escapeHTML(currentUser.name)}</b> · ${currentUser.role==='gestor' ? 'Gestor' : 'Montador'}<br><span id="switch-user" style="color:var(--orange);cursor:pointer;text-decoration:underline;">Trocar usuário</span>`
+      : 'Dados salvos e compartilhados entre todos os usuários desta ferramenta.';
+    const sw = document.getElementById('switch-user');
+    if(sw) sw.addEventListener('click', async ()=>{ currentUser = null; await esquecerUsuarioLogado(); viewHistory = []; currentView='dashboard'; document.getElementById('sidebar').style.display='none'; render(); });
+  }
+}
+
+function toast(msg, isError){
+  const t = document.createElement('div');
+  t.className = 'toast';
+  if(isError){ t.style.borderLeftColor = 'var(--red)'; t.style.maxWidth = '320px'; t.style.cursor = 'pointer'; t.title = 'Toque para fechar'; t.addEventListener('click', ()=>t.remove()); }
+  t.textContent = msg;
+  document.body.appendChild(t);
+  if(!isError) setTimeout(()=>t.remove(), 3200);
+}
+
+/* Captura qualquer erro de JavaScript não tratado e mostra na tela,
+   em vez de falhar silenciosamente (essencial para diagnosticar problemas
+   em navegadores/dispositivos onde não dá pra ver o console). */
+window.addEventListener('error', function(e){
+  toast('Erro no app: ' + (e.message || 'erro desconhecido') + (e.filename ? ' (linha ' + e.lineno + ')' : ''), true);
+});
+window.addEventListener('unhandledrejection', function(e){
+  const msg = (e.reason && e.reason.message) ? e.reason.message : String(e.reason);
+  toast('Erro no app: ' + msg, true);
+});
+
+/* ---------------- nav ---------------- */
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+    irPara(el.dataset.view);
+  });
+});
+document.getElementById('mobile-menu-btn').addEventListener('click', ()=>{
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+});
+document.getElementById('sidebar-overlay').addEventListener('click', ()=>{
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+});
+function setActiveNav(view){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.view===view));
+}
+
+/* ---------------- render router ---------------- */
+function render(){
+  if(!dataReady) return;
+  const main = document.getElementById('main');
+  const sidebar = document.getElementById('sidebar');
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  if(!currentUser){
+    sidebar.style.display = 'none';
+    menuBtn.style.display = 'none';
+    return renderLogin(main);
+  }
+  sidebar.style.display = 'flex';
+  menuBtn.style.display = '';
+  updateCounts();
+  setActiveNav(currentView);
+  if(currentView === 'dashboard') return renderDashboard(main);
+  if(currentView === 'nova-montagem') return renderNovaMontagem(main);
+  if(currentView === 'montagens') return renderMontagens(main);
+  if(currentView === 'nova-assistencia') return renderNovaAssistencia(main);
+  if(currentView === 'assistencias') return renderAssistencias(main);
+  if(currentView === 'detalhe-montagem') return renderDetalheMontagem(main, window.__viewId);
+  if(currentView === 'detalhe-assistencia') return renderDetalheAssistencia(main, window.__viewId);
+  if(currentView === 'backup') return renderBackup(main);
+}
+
+/* ---------------- login gate ---------------- */
+function renderLogin(main){
+  const montadores = listaMontadores();
+  main.innerHTML = `
+    <div style="max-width:420px;margin:60px auto 0 auto;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div class="lider-logo" style="display:inline-block;padding:18px 24px 15px 24px;margin-bottom:18px;">
+          <div class="wordmark" style="font-size:26px;">LIDER</div>
+          <span class="tagline">Gestão de Montagem</span>
+        </div>
+        <h1 style="font-family:var(--display);font-size:22px;margin:0 0 4px 0;">Identifique-se</h1>
+        <p style="color:var(--text-dim);font-size:13px;margin:0;">Cada montador vê apenas seus próprios relatórios de montagem.</p>
+      </div>
+
+      <div class="form-card" style="padding:22px;">
+        <div class="field">
+          <label>Seu nome (montador)</label>
+          <input type="text" id="login-nome" list="lista-montadores" placeholder="Digite ou selecione seu nome">
+          <datalist id="lista-montadores">${montadores.map(n=>`<option value="${escapeHTML(n)}">`).join('')}</datalist>
+        </div>
+        <button class="btn" id="btn-login-montador" style="width:100%;justify-content:center;margin-top:4px;">Entrar como montador</button>
+
+        <div style="display:flex;align-items:center;gap:10px;margin:20px 0;">
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+          <span style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.5px;">ou</span>
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+        </div>
+
+        <div class="field">
+          <label>Acesso de gestor / supervisor</label>
+          <input type="text" id="login-nome-gestor" placeholder="Seu nome">
+        </div>
+        <div class="field">
+          <input type="password" id="login-pin" placeholder="Código de acesso do gestor">
+        </div>
+        <button class="btn secondary" id="btn-login-gestor" style="width:100%;justify-content:center;">Entrar como gestor</button>
+        <div id="login-erro" style="color:var(--red);font-size:12px;margin-top:10px;display:none;"></div>
+      </div>
+      <p style="color:var(--text-faint);font-size:11px;text-align:center;margin-top:14px;">
+        Isto é uma identificação simples de uso interno, não uma senha de conta — use com bom senso.
+      </p>
+    </div>
+  `;
+  document.getElementById('btn-login-montador').addEventListener('click', async ()=>{
+    const nome = document.getElementById('login-nome').value.trim();
+    const err = document.getElementById('login-erro');
+    if(!nome){ err.textContent = 'Digite seu nome para continuar.'; err.style.display='block'; return; }
+    currentUser = { name: nome, role: 'montador' };
+    await salvarUsuarioLogado();
+    viewHistory = [];
+    currentView = 'dashboard';
+    render();
+  });
+  document.getElementById('btn-login-gestor').addEventListener('click', async ()=>{
+    const nome = document.getElementById('login-nome-gestor').value.trim();
+    const pin = document.getElementById('login-pin').value;
+    const err = document.getElementById('login-erro');
+    if(!nome){ err.textContent = 'Digite seu nome para continuar.'; err.style.display='block'; return; }
+    if(pin !== GESTOR_PIN){ err.textContent = 'Código de acesso incorreto.'; err.style.display='block'; return; }
+    currentUser = { name: nome, role: 'gestor' };
+    await salvarUsuarioLogado();
+    viewHistory = [];
+    currentView = 'dashboard';
+    render();
+  });
+}
+
+/* ---------------- dashboard ---------------- */
+function renderDashboard(main){
+  const minhasMontagens = visibleMontagens();
+  const mesAtual = mesAtualStr();
+  const montagensDoMes = minhasMontagens.filter(m => mesDaData(m.dataInicio) === mesAtual);
+  const comissaoDoMes = montagensDoMes.reduce((tot,m)=> tot + calcComissao(m.valorProjeto), 0);
+  const abertos = assistencias.filter(a=>a.status==='Aberto').length;
+  const andamento = assistencias.filter(a=>a.status==='Em andamento').length;
+  const aguardando = assistencias.filter(a=>a.status==='Aguardando peça').length;
+  const isGestor = currentUser.role === 'gestor';
+
+  const recentMontagens = [...minhasMontagens].sort((a,b)=>b.criadoEm-a.criadoEm).slice(0,4);
+  const recentAssist = [...assistencias].sort((a,b)=>b.criadoEm-a.criadoEm).slice(0,4);
+
+  main.innerHTML = `
+    <div class="welcome-banner">Bem-vindo, ${isGestor ? 'gestor' : 'montador'} <b>${escapeHTML(currentUser.name)}</b></div>
+    <div class="topbar">
+      <div>
+        <h1>Painel</h1>
+        <p>${isGestor ? 'Visão geral de todas as montagens Sherman e chamados de assistência técnica.' : 'Suas montagens Sherman e os chamados de assistência técnica da equipe.'}</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn secondary" data-nav="nova-montagem">+ Registrar montagem</button>
+        <button class="btn" data-nav="nova-assistencia">+ Abrir assistência</button>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-card accent-orange"><div class="stat-num">${montagensDoMes.length}</div><div class="stat-label">${isGestor ? 'Montagens no mês' : 'Suas montagens no mês'}</div></div>
+      <div class="stat-card accent-amber"><div class="stat-num">${abertos + andamento}</div><div class="stat-label">Assistências em aberto</div></div>
+      <div class="stat-card accent-red"><div class="stat-num">${aguardando}</div><div class="stat-label">Aguardando peça</div></div>
+      <div class="stat-card accent-green"><div class="stat-num" style="font-size:21px;">${formatBRL(comissaoDoMes)}</div><div class="stat-label">${isGestor ? 'Comissão do mês' : 'Sua comissão do mês'}</div></div>
+    </div>
+
+    <h3 class="section-title">${isGestor ? 'Últimas montagens registradas' : 'Suas últimas montagens'}</h3>
+    <div class="card-list">
+      ${recentMontagens.length ? recentMontagens.map(ticketMontagemHTML).join('') : emptyHTML('Nenhuma montagem registrada ainda', isGestor ? 'Registre a primeira montagem para vê-la aqui.' : 'Suas montagens registradas aparecerão aqui.')}
+    </div>
+
+    <h3 class="section-title">Últimos chamados de assistência</h3>
+    <div class="card-list">
+      ${recentAssist.length ? recentAssist.map(ticketAssistHTML).join('') : emptyHTML('Nenhum chamado ainda', 'Abra uma assistência técnica para vê-la aqui.')}
+    </div>
+  `;
+  bindNavButtons(main);
+  bindTicketClicks(main);
+}
+
+function bindNavButtons(scope){
+  scope.querySelectorAll('[data-nav]').forEach(b=>{
+    b.addEventListener('click', ()=>{ irPara(b.dataset.nav); });
+  });
+}
+function emptyHTML(title, sub){
+  return `<div class="empty"><b>${title}</b>${sub}</div>`;
+}
+
+/* ---------------- montagem: helpers ---------------- */
+function ticketMontagemHTML(m){
+  return `
+  <div class="ticket" data-type="montagem" data-id="${m.id}">
+    <span class="tnum">${m.numero}</span>
+    <div class="tmain"><b>${escapeHTML(m.cliente)} — ${escapeHTML(m.codigoProjeto)}</b><small>${escapeHTML(m.montador)} · Valor ${formatBRL(m.valorProjeto)} · Comissão ${formatBRL(calcComissao(m.valorProjeto))}</small></div>
+    <span class="badge ${statusMontagemClass(m)}">${statusMontagem(m)}</span>
+    <span class="tdate">${fmtDate(m.dataInicio)}</span>
+  </div>`;
+}
+
+function statusAssistClass(s){
+  if(s==='Resolvido') return 'green';
+  if(s==='Cancelado') return 'gray';
+  if(s==='Aguardando peça') return 'amber';
+  if(s==='Em andamento') return 'blue';
+  return 'red';
+}
+function ticketAssistHTML(a){
+  return `
+  <div class="ticket" data-type="assistencia" data-id="${a.id}">
+    <span class="tnum">${a.numero}</span>
+    <div class="tmain"><b>${escapeHTML(a.cliente)} ${a.codigoItem ? '— ' + escapeHTML(a.codigoItem) : ''}</b><small>${escapeHTML(a.ambiente || '')}${a.motivo ? ' · ' + escapeHTML(a.motivo) : ''}</small></div>
+    <span class="badge ${statusAssistClass(a.status)}">${a.status}</span>
+    <span class="tdate">${fmtDate(a.dataAbertura)}</span>
+  </div>`;
+}
+function bindTicketClicks(scope){
+  scope.querySelectorAll('.ticket').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      const destino = t.dataset.type === 'montagem' ? 'detalhe-montagem' : 'detalhe-assistencia';
+      irPara(destino, t.dataset.id);
+    });
+  });
+}
+function escapeHTML(s){
+  if(s===undefined || s===null) return '';
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---------------- nova montagem (form) ---------------- */
+function renderNovaMontagem(main){
+  main.innerHTML = `
+    <div class="topbar">
+      <div><h1>Registrar montagem</h1><p>Registro de montagens do mês, com cálculo automático da comissão de 1,2%.</p></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn ghost small" id="btn-voltar-nova-montagem">&larr; Voltar</button>
+        <button class="btn ghost small" data-nav="dashboard">🏠 Início</button>
+      </div>
+    </div>
+    <div class="form-card">
+      <form id="form-montagem" novalidate>
+        <div class="form-grid">
+          <div class="field"><label class="req">Nome do cliente</label><input type="text" id="f-cliente" required placeholder="Nome do cliente"></div>
+          <div class="field"><label class="req">Código do projeto</label><input type="text" id="f-codigo" required placeholder="Ex: PRJ-0421"></div>
+          ${currentUser.role==='montador'
+            ? `<div class="field"><label>Montador responsável</label><div style="padding:10px 12px;background:var(--panel-2);border:1px solid var(--border);border-radius:6px;font-size:13.5px;color:var(--text-dim);">Registrando como <b style="color:var(--text);">${escapeHTML(currentUser.name)}</b></div></div>`
+            : `<div class="field"><label class="req">Montador responsável</label><input type="text" id="f-montador" required placeholder="Nome do montador"></div>`
+          }
+          <div class="field">
+            <label class="req">Valor do projeto (R$)</label>
+            <input type="number" id="f-valor" required min="0" step="0.01" placeholder="0,00">
+            <span class="hint" id="f-comissao-preview">Comissão (1,2%): R$ 0,00</span>
+          </div>
+          <div class="field"><label class="req">Data de início</label><input type="date" id="f-inicio" required></div>
+          <div class="field"><label>Data de término</label><input type="date" id="f-termino"></div>
+        </div>
+
+        <div class="field full">
+          <label>Observações</label>
+          <textarea id="f-observacoes" placeholder="Pendências, detalhes do projeto, combinados com o cliente, etc."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn">Salvar montagem</button>
+          <button type="button" class="btn ghost" data-nav="dashboard">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  `;
+  bindNavButtons(main);
+  document.getElementById('btn-voltar-nova-montagem').addEventListener('click', voltarPagina);
+
+  const valorInput = document.getElementById('f-valor');
+  const preview = document.getElementById('f-comissao-preview');
+  valorInput.addEventListener('input', ()=>{
+    preview.textContent = 'Comissão (1,2%): ' + formatBRL(calcComissao(valorInput.value));
+  });
+
+  document.getElementById('form-montagem').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    try{
+      const cliente = document.getElementById('f-cliente').value.trim();
+      const codigoProjeto = document.getElementById('f-codigo').value.trim();
+      const montadorInput = document.getElementById('f-montador');
+      const montador = currentUser.role==='montador' ? currentUser.name.trim() : (montadorInput ? montadorInput.value.trim() : '');
+      const valorStr = document.getElementById('f-valor').value.trim();
+      const dataInicio = document.getElementById('f-inicio').value;
+      const faltando = [];
+      if(!cliente) faltando.push('Nome do cliente');
+      if(!codigoProjeto) faltando.push('Código do projeto');
+      if(!montador) faltando.push('Montador responsável');
+      if(!valorStr) faltando.push('Valor do projeto');
+      if(!dataInicio) faltando.push('Data de início');
+      if(faltando.length){
+        toast('Preencha antes de salvar: ' + faltando.join(', ') + '.', true);
+        return;
+      }
+      const m = {
+        id: uid(),
+        numero: nextNumero(montagens, 'OS'),
+        cliente,
+        codigoProjeto,
+        montador,
+        valorProjeto: parseFloat(valorStr) || 0,
+        dataInicio,
+        dataTermino: document.getElementById('f-termino').value,
+        observacoes: document.getElementById('f-observacoes').value.trim(),
+        criadoEm: Date.now()
+      };
+      montagens.push(m);
+      await salvarMontagemUnica(m);
+      updateCounts();
+      toast('Montagem ' + m.numero + ' registrada — comissão de ' + formatBRL(calcComissao(m.valorProjeto)) + '.');
+      irPara('detalhe-montagem', m.id);
+    }catch(err){
+      toast('Não foi possível registrar: ' + (err && err.message ? err.message : err), true);
+    }
+  });
+}
+
+/* ---------------- lista montagens ---------------- */
+function renderMontagens(main){
+  const isGestor = currentUser.role === 'gestor';
+  const minhasMontagens = visibleMontagens();
+  const montadoresOptions = isGestor ? listaMontadores().map(n=>`<option value="${escapeHTML(n)}">${n}</option>`).join('') : '';
+  main.innerHTML = `
+    <div class="topbar">
+      <div><h1>${isGestor ? 'Montagens do mês' : 'Suas montagens do mês'}</h1><p>Registro de montagens com cálculo automático de comissão (1,2%).</p></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn ghost small" id="btn-voltar-montagens">&larr; Voltar</button>
+        <button class="btn ghost small" data-nav="dashboard">🏠 Início</button>
+        <button class="btn" data-nav="nova-montagem">+ Registrar montagem</button>
+      </div>
+    </div>
+    <div class="filters">
+      <input type="month" id="mf-mes">
+      <input type="text" id="mf-search" placeholder="Buscar por cliente, código ou número...">
+      <select id="mf-periodo">
+        <option value="mes">Somente o mês selecionado</option>
+        <option value="todos">Todo o período</option>
+      </select>
+      ${isGestor ? `<select id="mf-montador"><option value="">Todos os montadores</option>${montadoresOptions}</select>` : ''}
+    </div>
+    <div class="stat-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px;">
+      <div class="stat-card accent-orange"><div class="stat-num" id="sum-qtd">0</div><div class="stat-label">Montagens</div></div>
+      <div class="stat-card accent-blue"><div class="stat-num" id="sum-valor" style="font-size:19px;">R$ 0,00</div><div class="stat-label">Valor total dos projetos</div></div>
+      <div class="stat-card accent-green"><div class="stat-num" id="sum-comissao" style="font-size:19px;">R$ 0,00</div><div class="stat-label">Comissão total (1,2%)</div></div>
+    </div>
+    <div class="card-list" id="montagens-list"></div>
+  `;
+  document.getElementById('mf-mes').value = mesAtualStr();
+  bindNavButtons(main);
+  document.getElementById('btn-voltar-montagens').addEventListener('click', voltarPagina);
+
+  function draw(){
+    const q = document.getElementById('mf-search').value.toLowerCase();
+    const periodo = document.getElementById('mf-periodo').value;
+    const mesSel = document.getElementById('mf-mes').value;
+    const mont = isGestor ? document.getElementById('mf-montador').value : '';
+    let list = [...minhasMontagens].sort((a,b)=>b.criadoEm-a.criadoEm);
+    if(periodo === 'mes' && mesSel) list = list.filter(m => mesDaData(m.dataInicio) === mesSel);
+    if(q) list = list.filter(m => (m.cliente+m.codigoProjeto+m.numero).toLowerCase().includes(q));
+    if(mont) list = list.filter(m => normalizeName(m.montador) === normalizeName(mont));
+
+    const valorTotal = list.reduce((t,m)=> t + (Number(m.valorProjeto)||0), 0);
+    const comissaoTotal = list.reduce((t,m)=> t + calcComissao(m.valorProjeto), 0);
+    document.getElementById('sum-qtd').textContent = list.length;
+    document.getElementById('sum-valor').textContent = formatBRL(valorTotal);
+    document.getElementById('sum-comissao').textContent = formatBRL(comissaoTotal);
+
+    const wrap = document.getElementById('montagens-list');
+    wrap.innerHTML = list.length ? list.map(ticketMontagemHTML).join('') : emptyHTML('Nada encontrado', 'Ajuste os filtros ou registre uma nova montagem.');
+    bindTicketClicks(wrap);
+  }
+  document.getElementById('mf-search').addEventListener('input', draw);
+  document.getElementById('mf-periodo').addEventListener('change', draw);
+  document.getElementById('mf-mes').addEventListener('change', draw);
+  if(isGestor) document.getElementById('mf-montador').addEventListener('change', draw);
+  draw();
+}
+
+/* ---------------- detalhe montagem ---------------- */
+function renderDetalheMontagem(main, id){
+  const m = montagens.find(x=>x.id===id);
+  const isGestor = currentUser.role === 'gestor';
+  if(!m || (!isGestor && normalizeName(m.montador) !== normalizeName(currentUser.name))){
+    currentView='montagens';
+    return render();
+  }
+  const assistenciasDoCliente = assistencias
+    .filter(a => normalizeName(a.cliente) === normalizeName(m.cliente))
+    .sort((a,b)=>b.criadoEm-a.criadoEm);
+  const pendentesDoCliente = assistenciasDoCliente.filter(a => a.status !== 'Resolvido' && a.status !== 'Cancelado');
+
+  main.innerHTML = `
+    <div class="topbar no-print">
+      <div style="display:flex;gap:8px;">
+        <button class="btn ghost small" data-nav="dashboard">🏠 Início</button>
+        <button class="btn ghost small" id="btn-voltar-montagem">&larr; Voltar</button>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn secondary small" id="btn-print-montagem">Imprimir / exportar</button>
+        <button class="btn secondary small" id="btn-excluir-montagem" style="color:var(--red);">Excluir</button>
+      </div>
+    </div>
+    <div class="detail-wrap">
+      <div class="detail-head">
+        <div>
+          <div class="num">${m.numero} · Registro de montagem</div>
+          <h2>${escapeHTML(m.cliente)}</h2>
+          <div class="sub">Código do projeto: ${escapeHTML(m.codigoProjeto)}</div>
+        </div>
+        <div class="stamp ${statusMontagemClass(m)}">${statusMontagem(m)}</div>
+      </div>
+      <div class="detail-body">
+        <div class="dl">
+          <div><b>Montador</b><span>${escapeHTML(m.montador)}</span></div>
+          <div><b>Código do projeto</b><span>${escapeHTML(m.codigoProjeto)}</span></div>
+          <div><b>Data de início</b><span>${fmtDate(m.dataInicio)}</span></div>
+          <div><b>Data de término</b><span>${m.dataTermino ? fmtDate(m.dataTermino) : 'Em andamento'}</span></div>
+        </div>
+
+        <div class="dl" style="margin-top:6px;">
+          <div><b>Valor do projeto</b><span style="font-family:var(--mono);font-size:16px;">${formatBRL(m.valorProjeto)}</span></div>
+          <div><b>Comissão (1,2%)</b><span style="font-family:var(--mono);font-size:16px;color:var(--green);">${formatBRL(calcComissao(m.valorProjeto))}</span></div>
+        </div>
+
+        ${m.observacoes ? `
+          <b style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-faint);margin:18px 0 6px 0;">Observações</b>
+          <div class="note-box">${escapeHTML(m.observacoes)}</div>
+        ` : ''}
+
+        <div class="history">
+          <b style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-faint);margin-bottom:8px;">
+            Assistências técnicas deste cliente
+            ${pendentesDoCliente.length ? `<span class="badge red" style="margin-left:6px;">${pendentesDoCliente.length} pendente(s)</span>` : ''}
+          </b>
+          ${assistenciasDoCliente.length
+            ? `<div class="card-list" id="assist-do-cliente" style="margin-bottom:0;">${assistenciasDoCliente.map(ticketAssistHTML).join('')}</div>`
+            : `<div class="empty" style="padding:20px;">Nenhuma assistência técnica registrada para ${escapeHTML(m.cliente)}.</div>`
+          }
+        </div>
+
+        <div id="confirma-exclusao-montagem" class="no-print"></div>
+      </div>
+    </div>
+  `;
+  bindNavButtons(main);
+  bindTicketClicks(main);
+  document.getElementById('btn-voltar-montagem').addEventListener('click', voltarPagina);
+  document.getElementById('btn-print-montagem').addEventListener('click', ()=>{ window.print(); });
+  document.getElementById('btn-excluir-montagem').addEventListener('click', ()=>{
+    document.getElementById('confirma-exclusao-montagem').innerHTML = `
+      <div class="note-box" style="margin-top:18px;border-color:var(--red);">
+        <b style="color:var(--red);display:block;margin-bottom:8px;">Excluir esta montagem?</b>
+        Essa ação não pode ser desfeita. O registro de ${escapeHTML(m.cliente)} — ${escapeHTML(m.codigoProjeto)} e a comissão de ${formatBRL(calcComissao(m.valorProjeto))} serão apagados.
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <button class="btn small" id="btn-confirmar-exclusao-montagem" style="background:var(--red);">Sim, excluir</button>
+          <button class="btn secondary small" id="btn-cancelar-exclusao-montagem">Cancelar</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('btn-cancelar-exclusao-montagem').addEventListener('click', ()=>{
+      document.getElementById('confirma-exclusao-montagem').innerHTML = '';
+    });
+    document.getElementById('btn-confirmar-exclusao-montagem').addEventListener('click', async ()=>{
+      await excluirMontagemUnica(m.id);
+      montagens = montagens.filter(x=>x.id !== m.id);
+      updateCounts();
+      toast('Montagem ' + m.numero + ' excluída.');
+      viewHistory = viewHistory.filter(h => h.id !== m.id);
+      irPara('montagens');
+    });
+  });
+}
+
+/* ---------------- nova assistência (form) ---------------- */
+function renderNovaAssistencia(main){
+  main.innerHTML = `
+    <div class="topbar">
+      <div><h1>Solicitação de recurso para montagem</h1><p>Abertura de assistência técnica / recurso para a equipe de montagem.</p></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn ghost small" id="btn-voltar-nova-assist">&larr; Voltar</button>
+        <button class="btn ghost small" data-nav="dashboard">🏠 Início</button>
+      </div>
+    </div>
+    <div class="form-card">
+      <form id="form-assist" novalidate>
+        <fieldset>
+          <legend>Identificação</legend>
+          <div class="form-grid">
+            <div class="field"><label class="req">Cliente</label><input type="text" id="a-cliente" required placeholder="Nome do cliente"></div>
+            <div class="field"><label class="req">Código do item</label><input type="text" id="a-codigo" required placeholder="Ex: 1ANSERVE648394J"></div>
+            <div class="field"><label class="req">Ambiente</label><input type="text" id="a-ambiente" required placeholder="Ex: Lavanderia, Cozinha, Closet"></div>
+            <div class="field"><label class="req">Data de abertura</label><input type="date" id="a-data" required></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Detalhamento do problema</legend>
+          <div class="field full"><label class="req">Situação</label><textarea id="a-situacao" required placeholder="Descreva a situação encontrada. Ex: A peça enviada veio com usinagem de prateleira, porém o projeto exige um tampo especial sem usinagem"></textarea></div>
+          <div class="form-grid">
+            <div class="field"><label class="req">Motivo</label><input type="text" id="a-motivo" required placeholder="Ex: Erro de usinagem (peça incorreta para o local)"></div>
+            <div class="field"><label>Acabamento</label><input type="text" id="a-acabamento" placeholder="Ex: Branco Tx"></div>
+            <div class="field full"><label>Medidas</label><input type="text" id="a-medidas" placeholder="Ex: Conforme projeto"></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Informações de serviço</legend>
+          <div class="form-grid">
+            <div class="field full"><label class="req">Recurso necessário</label><textarea id="a-recurso" required placeholder="Ex: Troca do tampo demarcado em projeto"></textarea></div>
+            <div class="field"><label>Tempo estimado de execução</label><input type="text" id="a-tempo" placeholder="Ex: 40 minutos"></div>
+          </div>
+        </fieldset>
+
+        <div class="field full"><label>Observação</label><textarea id="a-obs" placeholder="Ex: As medidas devem seguir conforme o projeto"></textarea></div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn">Abrir chamado</button>
+          <button type="button" class="btn ghost" data-nav="dashboard">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  `;
+  bindNavButtons(main);
+  document.getElementById('btn-voltar-nova-assist').addEventListener('click', voltarPagina);
+
+  document.getElementById('form-assist').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    try{
+      const cliente = document.getElementById('a-cliente').value.trim();
+      const codigoItem = document.getElementById('a-codigo').value.trim();
+      const ambiente = document.getElementById('a-ambiente').value.trim();
+      const dataAbertura = document.getElementById('a-data').value;
+      const situacao = document.getElementById('a-situacao').value.trim();
+      const motivo = document.getElementById('a-motivo').value.trim();
+      const faltando = [];
+      if(!cliente) faltando.push('Cliente');
+      if(!codigoItem) faltando.push('Código do item');
+      if(!ambiente) faltando.push('Ambiente');
+      if(!dataAbertura) faltando.push('Data de abertura');
+      if(!situacao) faltando.push('Situação');
+      if(!motivo) faltando.push('Motivo');
+      if(faltando.length){
+        toast('Preencha antes de salvar: ' + faltando.join(', ') + '.', true);
+        return;
+      }
+      const a = {
+        id: uid(),
+        numero: nextNumero(assistencias, 'AT'),
+        cliente,
+        codigoItem,
+        ambiente,
+        dataAbertura,
+        situacao,
+        motivo,
+        acabamento: document.getElementById('a-acabamento').value.trim(),
+        medidas: document.getElementById('a-medidas').value.trim(),
+        recurso: document.getElementById('a-recurso').value.trim(),
+        tempoEstimado: document.getElementById('a-tempo').value.trim(),
+        observacao: document.getElementById('a-obs').value.trim(),
+        status: 'Aberto',
+        historico: [{data: Date.now(), texto: 'Chamado aberto.'}],
+        criadoEm: Date.now()
+      };
+      assistencias.push(a);
+      try{ enviarWhatsApp(a); }catch(err){ console.error('Não foi possível abrir o WhatsApp automaticamente:', err); }
+      await salvarAssistenciaUnica(a);
+      updateCounts();
+      toast('Chamado ' + a.numero + ' aberto e salvo.');
+      irPara('detalhe-assistencia', a.id);
+    }catch(err){
+      toast('Não foi possível registrar: ' + (err && err.message ? err.message : err), true);
+    }
+  });
+}
+
+function montarMensagemWhatsApp(a){
+  const linhas = [
+    '*SOLICITAÇÃO DE RECURSO PARA MONTAGEM*',
+    'Nº ' + a.numero,
+    '',
+    '*Cliente:* ' + a.cliente,
+    '*Código do item:* ' + a.codigoItem,
+    '*Ambiente:* ' + a.ambiente,
+    '',
+    '*DETALHAMENTO DO PROBLEMA*',
+    '*Situação:* ' + a.situacao,
+    '*Motivo:* ' + a.motivo,
+    a.acabamento ? '*Acabamento:* ' + a.acabamento : null,
+    a.medidas ? '*Medidas:* ' + a.medidas : null,
+    '',
+    '*INFORMAÇÕES DE SERVIÇO*',
+    '*Recurso necessário:* ' + a.recurso,
+    a.tempoEstimado ? '*Tempo estimado de execução:* ' + a.tempoEstimado : null,
+    a.observacao ? '' : null,
+    a.observacao ? '*Observação:* ' + a.observacao : null
+  ].filter(l => l !== null);
+  return linhas.join('\n');
+}
+
+function enviarWhatsApp(a){
+  const texto = encodeURIComponent(montarMensagemWhatsApp(a));
+  const numero = WHATSAPP_NUMERO ? WHATSAPP_NUMERO.replace(/\D/g,'') : '';
+  const url = numero ? `https://wa.me/${numero}?text=${texto}` : `https://wa.me/?text=${texto}`;
+  window.open(url, '_blank');
+}
+
+/* ---------------- backup / restauração ---------------- */
+function renderBackup(main){
+  const isGestor = currentUser.role === 'gestor';
+  if(!isGestor){
+    main.innerHTML = `
+      <div class="topbar"><div><h1>Backup</h1><p>Disponível apenas para o acesso de gestor.</p></div></div>
+      <div class="empty"><b>Acesso restrito</b>Peça para um gestor baixar ou restaurar o backup dos dados.</div>
+    `;
+    return;
+  }
+  main.innerHTML = `
+    <div class="topbar">
+      <div><h1>Backup e dados</h1><p>Guarde uma cópia de segurança de todas as montagens e assistências, ou restaure a partir de um arquivo salvo antes.</p></div>
+    </div>
+
+    <div class="form-card" style="max-width:640px;">
+      <h3 class="section-title" style="margin-top:0;">Baixar backup</h3>
+      <p style="color:var(--text-dim);font-size:13px;margin:0 0 14px 0;">
+        Gera um arquivo .json com todas as ${montagens.length} montagens e ${assistencias.length} assistências registradas até agora. Guarde esse arquivo em local seguro (e-mail, Drive) de tempos em tempos.
+      </p>
+      <button class="btn" id="btn-baixar-backup">Baixar backup (.json)</button>
+    </div>
+
+    <div class="form-card" style="max-width:640px;margin-top:20px;">
+      <h3 class="section-title" style="margin-top:0;">Restaurar backup</h3>
+      <p style="color:var(--text-dim);font-size:13px;margin:0 0 14px 0;">
+        Selecione um arquivo de backup salvo anteriormente. Registros já existentes não são substituídos — apenas os que estiverem faltando são adicionados de volta.
+      </p>
+      <input type="file" id="input-backup" accept="application/json,.json" style="margin-bottom:12px;">
+      <div id="backup-preview"></div>
+    </div>
+  `;
+  document.getElementById('btn-baixar-backup').addEventListener('click', baixarBackup);
+
+  document.getElementById('input-backup').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt)=>{
+      let dados;
+      try{ dados = JSON.parse(evt.target.result); }
+      catch(err){ document.getElementById('backup-preview').innerHTML = '<p style="color:var(--red);font-size:13px;">Arquivo inválido — não é um backup .json reconhecível.</p>'; return; }
+      const mBackup = Array.isArray(dados.montagens) ? dados.montagens : [];
+      const aBackup = Array.isArray(dados.assistencias) ? dados.assistencias : [];
+      const idsMontagens = new Set(montagens.map(m=>m.id));
+      const idsAssist = new Set(assistencias.map(a=>a.id));
+      const novasMontagens = mBackup.filter(m=>m.id && !idsMontagens.has(m.id));
+      const novasAssist = aBackup.filter(a=>a.id && !idsAssist.has(a.id));
+
+      document.getElementById('backup-preview').innerHTML = `
+        <div class="note-box" style="margin-bottom:12px;">
+          Backup de ${dados.geradoEm ? fmtDate(dados.geradoEm.slice(0,10)) : 'data desconhecida'}.<br>
+          Encontrados ${mBackup.length} montagens e ${aBackup.length} assistências no arquivo.<br>
+          <b style="color:var(--green);">${novasMontagens.length} montagens</b> e <b style="color:var(--green);">${novasAssist.length} assistências</b> serão adicionadas (o restante já existe e será ignorado).
+        </div>
+        <button class="btn secondary" id="btn-confirmar-restauro" ${(novasMontagens.length+novasAssist.length)===0 ? 'disabled' : ''}>Confirmar restauração</button>
+      `;
+      const btn = document.getElementById('btn-confirmar-restauro');
+      if(btn) btn.addEventListener('click', async ()=>{
+        montagens = montagens.concat(novasMontagens);
+        assistencias = assistencias.concat(novasAssist);
+        for(const nm of novasMontagens) await salvarMontagemUnica(nm);
+        for(const na of novasAssist) await salvarAssistenciaUnica(na);
+        updateCounts();
+        toast('Restauração concluída: ' + novasMontagens.length + ' montagens e ' + novasAssist.length + ' assistências adicionadas.');
+        document.getElementById('backup-preview').innerHTML = '';
+        document.getElementById('input-backup').value = '';
+      });
+    };
+    reader.readAsText(file);
+  });
+}
+
+function baixarBackup(){
+  const payload = { geradoEm: new Date().toISOString(), montagens, assistencias };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'backup-lider-' + todayISO() + '.json';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  toast('Backup baixado.');
+}
+
+function gerarPDFAssistencia(a){
+  if(!window.jspdf || !window.jspdf.jsPDF){
+    toast('Gerador de PDF ainda carregando, tente novamente em alguns segundos.', true);
+    return;
+  }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const margemEsq = 18, margemDir = 192, larguraTexto = margemDir - 62;
+  let y = 22;
+
+  function quebraPagina(altura){
+    if(y + altura > 280){ doc.addPage(); y = 22; }
+  }
+  function titulo(texto){
+    quebraPagina(10);
+    doc.setFont('helvetica','bold'); doc.setFontSize(11);
+    doc.text(texto, margemEsq, y);
+    y += 3;
+    doc.setDrawColor(180,180,175);
+    doc.line(margemEsq, y, margemDir, y);
+    y += 7;
+    doc.setFontSize(10);
+  }
+  function campo(label, valor){
+    const lines = doc.splitTextToSize(valor && valor.trim() ? valor : '—', larguraTexto);
+    quebraPagina(lines.length * 5 + 2);
+    doc.setFont('helvetica','bold');
+    doc.text(label, margemEsq, y);
+    doc.setFont('helvetica','normal');
+    doc.text(lines, 62, y);
+    y += Math.max(6, lines.length * 5);
+  }
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(15);
+  doc.text('SOLICITAÇÃO DE RECURSO PARA MONTAGEM', margemEsq, y);
+  y += 7;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(110,110,103);
+  doc.text('Nº ' + a.numero + '   ·   Status: ' + a.status + '   ·   Aberto em ' + fmtDate(a.dataAbertura), margemEsq, y);
+  doc.setTextColor(0,0,0);
+  y += 10;
+
+  titulo('IDENTIFICAÇÃO');
+  campo('Cliente:', a.cliente);
+  campo('Código do item:', a.codigoItem);
+  campo('Ambiente:', a.ambiente);
+  y += 3;
+
+  titulo('DETALHAMENTO DO PROBLEMA');
+  campo('Situação:', a.situacao);
+  campo('Motivo:', a.motivo);
+  campo('Acabamento:', a.acabamento);
+  campo('Medidas:', a.medidas);
+  y += 3;
+
+  titulo('INFORMAÇÕES DE SERVIÇO');
+  campo('Recurso necessário:', a.recurso);
+  campo('Tempo estimado:', a.tempoEstimado);
+
+  if(a.observacao && a.observacao.trim()){
+    y += 3;
+    titulo('OBSERVAÇÃO');
+    campo('', a.observacao);
+  }
+
+  doc.setFontSize(8); doc.setTextColor(150,150,145);
+  doc.text('LIDER — Gestão de Montagem', margemEsq, 290);
+
+  doc.save('Solicitacao_' + a.numero + '.pdf');
+}
+
+/* ---------------- lista assistências ---------------- */
+function renderAssistencias(main){
+  main.innerHTML = `
+    <div class="topbar">
+      <div><h1>Assistências técnicas</h1><p>${assistencias.length} chamado(s) registrado(s).</p></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn ghost small" id="btn-voltar-assistencias">&larr; Voltar</button>
+        <button class="btn ghost small" data-nav="dashboard">🏠 Início</button>
+        <button class="btn" data-nav="nova-assistencia">+ Abrir chamado</button>
+      </div>
+    </div>
+    <div class="filters">
+      <input type="text" id="af-search" placeholder="Buscar por cliente, produto ou número...">
+      <select id="af-status">
+        <option value="">Todos os status</option>
+        <option>Aberto</option><option>Em andamento</option><option>Aguardando peça</option><option>Resolvido</option><option>Cancelado</option>
+      </select>
+    </div>
+    <div class="card-list" id="assist-list"></div>
+  `;
+  bindNavButtons(main);
+  document.getElementById('btn-voltar-assistencias').addEventListener('click', voltarPagina);
+
+  function draw(){
+    const q = document.getElementById('af-search').value.toLowerCase();
+    const st = document.getElementById('af-status').value;
+    let list = [...assistencias].sort((a,b)=>b.criadoEm-a.criadoEm);
+    if(q) list = list.filter(a => (a.cliente+(a.codigoItem||'')+a.numero).toLowerCase().includes(q));
+    if(st) list = list.filter(a => a.status === st);
+    const wrap = document.getElementById('assist-list');
+    wrap.innerHTML = list.length ? list.map(ticketAssistHTML).join('') : emptyHTML('Nada encontrado', 'Ajuste os filtros ou abra um novo chamado.');
+    bindTicketClicks(wrap);
+  }
+  document.getElementById('af-search').addEventListener('input', draw);
+  document.getElementById('af-status').addEventListener('change', draw);
+  draw();
+}
+
+/* ---------------- detalhe assistência ---------------- */
+function renderDetalheAssistencia(main, id){
+  const a = assistencias.find(x=>x.id===id);
+  if(!a){ currentView='assistencias'; return render(); }
+  main.innerHTML = `
+    <div class="topbar no-print">
+      <div style="display:flex;gap:8px;">
+        <button class="btn ghost small" data-nav="dashboard">🏠 Início</button>
+        <button class="btn ghost small" id="btn-voltar-assist">&larr; Voltar</button>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn secondary small" id="btn-whatsapp-assist">Reenviar via WhatsApp</button>
+        <button class="btn secondary small" id="btn-pdf-assist">Baixar PDF</button>
+        <button class="btn secondary small" id="btn-print-assist">Imprimir / exportar</button>
+        <button class="btn secondary small" id="btn-excluir-assist" style="color:var(--red);">Excluir</button>
+      </div>
+    </div>
+    <div class="detail-wrap">
+      <div class="detail-head">
+        <div>
+          <div class="num">${a.numero} · Solicitação de recurso para montagem</div>
+          <h2>${escapeHTML(a.cliente)}</h2>
+          <div class="sub">${escapeHTML(a.codigoItem) || 'Sem código de item'} ${a.ambiente ? '· ' + escapeHTML(a.ambiente) : ''}</div>
+        </div>
+        <div class="stamp ${statusAssistClass(a.status)}">${a.status}</div>
+      </div>
+      <div class="detail-body">
+        <div class="dl">
+          <div><b>Código do item</b><span>${escapeHTML(a.codigoItem) || '—'}</span></div>
+          <div><b>Ambiente</b><span>${escapeHTML(a.ambiente) || '—'}</span></div>
+          <div><b>Data de abertura</b><span>${fmtDate(a.dataAbertura)}</span></div>
+        </div>
+
+        <b style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-faint);margin-bottom:6px;">Detalhamento do problema</b>
+        <div class="note-box" style="margin-bottom:10px;"><b style="display:block;font-size:10.5px;color:var(--text-faint);margin-bottom:3px;">Situação</b>${escapeHTML(a.situacao) || '—'}</div>
+        <div class="dl" style="margin-bottom:18px;">
+          <div><b>Motivo</b><span>${escapeHTML(a.motivo) || '—'}</span></div>
+          <div><b>Acabamento</b><span>${escapeHTML(a.acabamento) || '—'}</span></div>
+          <div><b>Medidas</b><span>${escapeHTML(a.medidas) || '—'}</span></div>
+        </div>
+
+        <b style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-faint);margin-bottom:6px;">Informações de serviço</b>
+        <div class="dl" style="margin-bottom:10px;">
+          <div><b>Tempo estimado de execução</b><span>${escapeHTML(a.tempoEstimado) || '—'}</span></div>
+        </div>
+        <div class="note-box"><b style="display:block;font-size:10.5px;color:var(--text-faint);margin-bottom:3px;">Recurso necessário</b>${escapeHTML(a.recurso) || '—'}</div>
+
+        ${a.observacao ? `<b style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-faint);margin:18px 0 6px 0;">Observação</b><div class="note-box">${escapeHTML(a.observacao)}</div>` : ''}
+
+        <div class="history">
+          <b style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-faint);margin-bottom:4px;">Histórico</b>
+          ${a.historico.slice().reverse().map(h=>`<div class="history-item"><span class="hdate">${new Date(h.data).toLocaleString('pt-BR')}</span><span class="htxt">${escapeHTML(h.texto)}</span></div>`).join('')}
+
+          <div class="status-update no-print">
+            <select id="upd-status">
+              <option ${a.status==='Aberto'?'selected':''}>Aberto</option>
+              <option ${a.status==='Em andamento'?'selected':''}>Em andamento</option>
+              <option ${a.status==='Aguardando peça'?'selected':''}>Aguardando peça</option>
+              <option ${a.status==='Resolvido'?'selected':''}>Resolvido</option>
+              <option ${a.status==='Cancelado'?'selected':''}>Cancelado</option>
+            </select>
+            <input type="text" id="upd-nota" placeholder="Nota sobre esta atualização (opcional)">
+            <button class="btn small" id="upd-btn">Atualizar</button>
+          </div>
+        </div>
+
+        <div id="confirma-exclusao-assist" class="no-print"></div>
+      </div>
+    </div>
+  `;
+  bindNavButtons(main);
+  document.getElementById('btn-voltar-assist').addEventListener('click', voltarPagina);
+  document.getElementById('btn-print-assist').addEventListener('click', ()=>{ window.print(); });
+  document.getElementById('btn-pdf-assist').addEventListener('click', ()=>{ try{ gerarPDFAssistencia(a); }catch(err){ toast('Erro ao gerar o PDF.', true); } });
+  document.getElementById('btn-whatsapp-assist').addEventListener('click', ()=>{ try{ enviarWhatsApp(a); }catch(err){ toast('Não foi possível abrir o WhatsApp neste navegador.', true); } });
+  document.getElementById('upd-btn').addEventListener('click', async ()=>{
+    const novoStatus = document.getElementById('upd-status').value;
+    const nota = document.getElementById('upd-nota').value.trim();
+    a.status = novoStatus;
+    a.historico.push({data: Date.now(), texto: 'Status alterado para "' + novoStatus + '".' + (nota ? ' ' + nota : '')});
+    await salvarAssistenciaUnica(a);
+    updateCounts();
+    toast('Chamado atualizado.');
+    render();
+  });
+  document.getElementById('btn-excluir-assist').addEventListener('click', ()=>{
+    document.getElementById('confirma-exclusao-assist').innerHTML = `
+      <div class="note-box" style="margin-top:18px;border-color:var(--red);">
+        <b style="color:var(--red);display:block;margin-bottom:8px;">Excluir este chamado?</b>
+        Essa ação não pode ser desfeita. O chamado ${a.numero} — ${escapeHTML(a.cliente)} será apagado.
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <button class="btn small" id="btn-confirmar-exclusao-assist" style="background:var(--red);">Sim, excluir</button>
+          <button class="btn secondary small" id="btn-cancelar-exclusao-assist">Cancelar</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('btn-cancelar-exclusao-assist').addEventListener('click', ()=>{
+      document.getElementById('confirma-exclusao-assist').innerHTML = '';
+    });
+    document.getElementById('btn-confirmar-exclusao-assist').addEventListener('click', async ()=>{
+      await excluirAssistenciaUnica(a.id);
+      assistencias = assistencias.filter(x=>x.id !== a.id);
+      updateCounts();
+      toast('Chamado ' + a.numero + ' excluído.');
+      viewHistory = viewHistory.filter(h => h.id !== a.id);
+      irPara('assistencias');
+    });
+  });
+}
+
+/* ---------------- init ---------------- */
+loadData();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>
